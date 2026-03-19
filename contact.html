@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — GlobeTech LLC</title>
+  <meta name="description" content="Contact GlobeTech LLC for penetration testing and vulnerability assessment services. Request a consultation or get a quote.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">Globe<span>Tech</span></a>
+      <nav>
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="nav-links">
+          <a href="/">Home</a>
+          <div class="nav-dropdown">
+            <a href="/services/">Services</a>
+            <div class="nav-dropdown-menu">
+              <a href="/services/network-pentest.html">Network Penetration Testing</a>
+              <a href="/services/web-app-pentest.html">Web Application Penetration Testing</a>
+              <a href="/services/wifi-testing.html">WiFi Testing</a>
+              <a href="/services/internal-vuln-scanning.html">Internal Vulnerability Scanning</a>
+              <a href="/services/external-vuln-scanning.html">External Vulnerability Scanning</a>
+            </div>
+          </div>
+          <a href="/pricing.html">Pricing</a>
+          <a href="/about.html">About</a>
+          <a href="/blog/">Blog</a>
+          <a href="/contact.html" class="btn btn--primary btn--sm active">Contact</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="container">
+      <p class="section-label">Contact</p>
+      <h1>Get in Touch</h1>
+      <p>Ready to discuss a security assessment? Fill out the form below and we'll get back to you promptly.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid-2">
+
+        <div class="contact-form">
+          <!-- Formspree form — replace YOUR_FORM_ID with your actual Formspree endpoint -->
+          <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" required autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required autocomplete="email">
+            </div>
+            <div class="form-group">
+              <label for="company">Company</label>
+              <input type="text" id="company" name="company" autocomplete="organization">
+            </div>
+            <div class="form-group">
+              <label for="service">Service Interest</label>
+              <select id="service" name="service">
+                <option value="">Select a service...</option>
+                <option value="network-pentest">Network Penetration Testing</option>
+                <option value="web-app-pentest">Web Application Penetration Testing</option>
+                <option value="wifi-testing">WiFi Security Testing</option>
+                <option value="internal-scanning">Internal Vulnerability Scanning</option>
+                <option value="external-scanning">External Vulnerability Scanning</option>
+                <option value="custom">Custom Engagement</option>
+                <option value="other">Other / Not Sure</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" required placeholder="Tell us about your environment and what you're looking for..."></textarea>
+            </div>
+            <!-- Honeypot field for spam prevention -->
+            <input type="text" name="_gotcha" style="display:none">
+            <button type="submit" class="btn btn--primary">Send Message</button>
+          </form>
+        </div>
+
+        <div>
+          <h3 style="margin-bottom: var(--space-md);">Other Ways to Reach Us</h3>
+          <p class="text-muted" style="margin-bottom: var(--space-xl);">Based in West Bend, WI — serving businesses throughout Wisconsin and beyond. GlobeTech is entirely cloud-hosted, so we can work with you regardless of location.</p>
+
+          <h4 style="margin-bottom: var(--space-sm);">Response Time</h4>
+          <p class="text-muted" style="margin-bottom: var(--space-xl);">Most inquiries receive a response within one business day. For urgent matters, note that in your message and we'll prioritize accordingly.</p>
+
+          <h4 style="margin-bottom: var(--space-sm);">What to Include</h4>
+          <p class="text-muted">To help scope your engagement quickly, consider including:</p>
+          <ul style="margin-top: var(--space-sm);">
+            <li class="text-muted" style="padding: var(--space-xs) 0;">Number of internal/external IP addresses or ranges</li>
+            <li class="text-muted" style="padding: var(--space-xs) 0;">Number and complexity of web applications</li>
+            <li class="text-muted" style="padding: var(--space-xs) 0;">Any compliance requirements (PCI, HIPAA, etc.)</li>
+            <li class="text-muted" style="padding: var(--space-xs) 0;">Preferred timeline for the engagement</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="site-logo">Globe<span>Tech</span></a>
+          <p>Professional penetration testing and cybersecurity consulting. Manual testing, thorough reporting, actionable results.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <a href="/services/network-pentest.html">Network Pentest</a>
+          <a href="/services/web-app-pentest.html">Web App Pentest</a>
+          <a href="/services/wifi-testing.html">WiFi Testing</a>
+          <a href="/services/internal-vuln-scanning.html">Internal Scanning</a>
+          <a href="/services/external-vuln-scanning.html">External Scanning</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="/about.html">About</a>
+          <a href="/pricing.html">Pricing</a>
+          <a href="/blog/">Blog</a>
+          <a href="/contact.html">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <a href="https://www.linkedin.com/company/globetechllc" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; <span id="current-year">2026</span> GlobeTech LLC. All rights reserved.</span>
+        <span>globetech.biz</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>
