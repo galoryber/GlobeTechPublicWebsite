@@ -1,4 +1,4 @@
-<h4 class="has-text-color has-text-align-center wp-block-heading" style="color:#a90c0c">Blog Preface &#8211; &#8220;Windows Kits&#8221;</h4>
+<h2 class="has-text-color has-text-align-center wp-block-heading" style="color:#a90c0c">Blog Preface &#8211; &#8220;Windows Kits&#8221;</h2>
 
 <p class="has-text-align-center wp-block-paragraph">While running through some MITRE techniques, I happened upon the ADK tools and SDK tools and found a great collection of programs used for development, debugging, and administration. It just so happens, they&#8217;re also great for Red Teaming. Many of them are Digitally Signed by Microsoft, making them a great bypass for Applocker / Application Whitelisting. </p>
 
@@ -6,11 +6,11 @@
 <p class="has-large-font-size wp-block-paragraph">In this post, we&#8217;re expanding on the CDB.exe tool that we touched on in the last post. </p>
 </div></div>
 
-<h4 class="has-text-align-center wp-block-heading">T1127 &#8211; Trusted Developer Tools </h4>
+<h2 class="has-text-align-center wp-block-heading">T1127 &#8211; Trusted Developer Tools </h2>
 
-<h6 class="has-text-align-center wp-block-heading"><a href="https://attack.mitre.org/techniques/T1127/">https://attack.mitre.org/techniques/T1127</a></h6>
+<h3 class="has-text-align-center wp-block-heading"><a href="https://attack.mitre.org/techniques/T1127/">https://attack.mitre.org/techniques/T1127</a></h3>
 
-<div style="height:20px" aria-hidden="true"></div>
+<div aria-hidden="true"></div>
 
 <p>There are a lot of tools within the realm of T1127, each worthy of review. I took an interest in this one because of its raw and simple power. With a little effort, I could use it to execute my own shell commands, and with a little more effort, my own shellcode. All of which flew under the nose of AV systems. </p>
 
@@ -89,7 +89,7 @@ Set-Location $env:TEMP
 <p>Finally, -o this is the process that the debugger will open and attach to.</p>
 
 <div style="grid-template-columns:41% auto"><figure><img width="1024" height="653" src="/img/posts/2020-07-cards-161404_1280-1-1024x653.png" alt="" /></figure><div>
-<h3 class="has-secondary-color has-text-color wp-block-heading">I&#8217;ll take your RCE, and I&#8217;ll raise you a Reverse Shell</h3>
+<h2 class="has-secondary-color has-text-color wp-block-heading">I&#8217;ll take your RCE, and I&#8217;ll raise you a Reverse Shell</h2>
 </div></div>
 
 <p>We&#8217;ll use our powershell one-liner to pull the payload from an attacking web server, in this case, just a python SimpleHTTPServer. The attacking server also has a netcat listener running to receive the connection. The console on the left is an ssh session to the attacking server, and the console on the right is the victim powershell window. </p>

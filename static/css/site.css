@@ -189,11 +189,11 @@ a.card:hover { border-color: var(--rule-firm); transform: translateY(-2px); }
 .posts li:first-child { border-top: 1px solid var(--rule); }
 .posts a.post-link { display: grid; grid-template-columns: 106px 1fr; gap: 24px;
   padding: 24px 4px; text-decoration: none; color: inherit; align-items: baseline; }
-.posts a.post-link:hover h3 { color: var(--signal); }
+.posts a.post-link:hover :is(h2, h3) { color: var(--signal); }
 .posts time { font-family: var(--mono); font-size: .8rem; color: var(--faint);
   font-variant-numeric: tabular-nums; letter-spacing: .02em; }
-.posts h3 { margin: 0 0 6px; font-size: 1.2rem; letter-spacing: -.012em; color: var(--navy);
-  transition: color .15s; text-wrap: balance; }
+.posts :is(h2, h3) { margin: 0 0 6px; font-size: 1.2rem; letter-spacing: -.012em;
+  color: var(--navy); transition: color .15s; text-wrap: balance; font-weight: 600; }
 .posts p { margin: 0; color: var(--muted); font-size: .95rem; max-width: 72ch; }
 @media (max-width: 620px) {
   .posts a.post-link { grid-template-columns: 1fr; gap: 6px; }

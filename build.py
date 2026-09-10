@@ -145,6 +145,16 @@ def page_body(slug: str) -> str:
     return (CONTENT / "pages" / f"{slug}.html").read_text(encoding="utf-8")
 
 
+def post_row(p, level: int = 3) -> str:
+    """One entry in a post list. `level` is the heading level for the title —
+    the blog index puts these under the page h1, the home page under an h2."""
+    nice = dt.date.fromisoformat(p["date"]).strftime("%b %-d, %Y")
+    return f"""          <li><a class="post-link" href="/blog/{e(p["slug"])}/">
+            <time datetime="{e(p["date"])}">{nice}</time>
+            <span><h{level}>{e(p["title"])}</h{level}><p>{e(p["excerpt"][:190])}</p></span>
+          </a></li>"""
+
+
 def render_home() -> str:
     """The home page is composed, not imported.
 
@@ -161,10 +171,7 @@ def render_home() -> str:
             <span class="more">Read more &rarr;</span>
           </a>""" for s_ in services)
 
-    recent = "\n".join(f"""          <li><a class="post-link" href="/blog/{e(p["slug"])}/">
-            <time datetime="{e(p["date"])}">{dt.date.fromisoformat(p["date"]).strftime("%b %-d, %Y")}</time>
-            <span><h3>{e(p["title"])}</h3><p>{e(p["excerpt"][:150])}</p></span>
-          </a></li>""" for p in POSTS[:4])
+    recent = "\n".join(post_row(p, 3) for p in POSTS[:4])
 
     intro = "\n".join(f"          <p>{e(t)}</p>" for t in HOME["intro"])
 
@@ -303,10 +310,7 @@ def render_post(p) -> str:
 
 
 def render_blog_index() -> str:
-    items = "\n".join(f"""          <li><a class="post-link" href="/blog/{e(p["slug"])}/">
-            <time datetime="{e(p["date"])}">{dt.date.fromisoformat(p["date"]).strftime("%b %-d, %Y")}</time>
-            <span><h3>{e(p["title"])}</h3><p>{e(p["excerpt"])}</p></span>
-          </a></li>""" for p in POSTS)
+    items = "\n".join(post_row(p, 2) for p in POSTS)
     body = f"""    <div class="page-head">
       <div class="wrap">
         <h1>Blog</h1>

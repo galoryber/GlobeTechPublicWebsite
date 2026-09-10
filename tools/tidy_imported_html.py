@@ -42,6 +42,43 @@ DROP_TRAILING_CONTACT = {
 }
 
 
+def normalise_outline(body: str) -> str:
+    """Rewrite heading levels into a valid outline starting at h2.
+
+    Blog posts were the worst of it: one starts at h4 and uses nothing else,
+    another runs h2 -> h6, a third opens at h5. Hand-mapping eleven posts would
+    be guesswork, so relative nesting is inferred from the original levels and
+    re-emitted contiguously. The page/post title is the h1, so bodies start at
+    h2 and never skip.
+    """
+    stack: list[tuple[int, int]] = []          # (original level, emitted level)
+
+    def repl(m):
+        nonlocal stack
+        closing, level, rest = m.group(1), int(m.group(2)), m.group(3)
+        if closing:
+            return m.group(0)                   # patched below, in pairs
+        while stack and stack[-1][0] >= level:
+            stack.pop()
+        emitted = min(stack[-1][1] + 1, 6) if stack else 2
+        stack.append((level, emitted))
+        return f"<h{emitted}{rest}"
+
+    # rewrite openers, remembering what each became, then match the closers
+    emitted_levels: list[int] = []
+
+    def repl_open(m):
+        out = repl(m)
+        emitted_levels.append(int(out[2]))
+        return out
+
+    body = re.sub(r"<(/?)h([1-6])([^>]*>)",
+                  lambda m: repl_open(m) if not m.group(1) else m.group(0), body)
+
+    it = iter(emitted_levels)
+    return re.sub(r"</h[1-6]>", lambda m: f"</h{next(it)}>", body)
+
+
 def remap_headings(body: str, mapping: dict[int, int]) -> str:
     def repl(m):
         old = int(m.group(2))
@@ -83,6 +120,7 @@ def drop_trailing_contact(body: str) -> str:
 
 
 def main():
+    print("Pages:")
     slugs = [p["slug"] for p in json.loads((ROOT / "content" / "pages.json").read_text())]
     for slug in slugs:
         f = PAGES / f"{slug}.html"
@@ -110,5 +148,31 @@ def main():
             print(f"  {slug:<40} (unchanged)")
 
 
+def tidy_posts():
+    posts_dir = ROOT / "content" / "posts"
+    print("\nPosts:")
+    for p in json.loads((ROOT / "content" / "posts.json").read_text()):
+        f = posts_dir / f'{p["slug"]}.html'
+        body = original = f.read_text(encoding="utf-8")
+        notes = []
+        fixed = normalise_outline(body)
+        if fixed != body:
+            body = fixed
+            notes.append("outline")
+        if 'style="' in body:
+            body = strip_pinned_sizes(body)
+            notes.append("pinned sizes")
+        grouped = group_figure_runs(body)
+        if grouped != body:
+            body = grouped
+            notes.append("figure rows")
+        if body != original:
+            f.write_text(body, encoding="utf-8")
+            print(f"  {p['slug'][:44]:<46} {', '.join(notes)}")
+        else:
+            print(f"  {p['slug'][:44]:<46} (unchanged)")
+
+
 if __name__ == "__main__":
     main()
+    tidy_posts()

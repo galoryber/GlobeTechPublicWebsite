@@ -1,4 +1,4 @@
-<h4 class="has-text-align-center has-text-color wp-block-heading" style="color:#a90c0c">Blog Preface &#8211; &#8220;Windows Kits&#8221;</h4>
+<h2 class="has-text-align-center has-text-color wp-block-heading" style="color:#a90c0c">Blog Preface &#8211; &#8220;Windows Kits&#8221;</h2>
 
 <p class="has-text-align-center wp-block-paragraph">While running through some MITRE techniques, I happened upon the ADK tools and SDK tools and found a great collection of programs used for development, debugging, and administration. It just so happens, they&#8217;re also great for Red Teaming. Many of them are Digitally Signed by Microsoft, making them a great bypass for Applocker / Application Whitelisting. </p>
 
@@ -6,11 +6,11 @@
 <p class="has-large-font-size wp-block-paragraph">In this post, we&#8217;ll talk about one of the core principles of Red Teaming.</p>
 </div></div>
 
-<h4 class="has-text-align-center wp-block-heading">T1003 &#8211; Credential Dumping </h4>
+<h2 class="has-text-align-center wp-block-heading">T1003 &#8211; Credential Dumping </h2>
 
-<h6 class="has-text-align-center wp-block-heading"><a href="https://attack.mitre.org/techniques/T1003/">https://attack.mitre.org/techniques/T1003/</a></h6>
+<h3 class="has-text-align-center wp-block-heading"><a href="https://attack.mitre.org/techniques/T1003/">https://attack.mitre.org/techniques/T1003/</a></h3>
 
-<div style="height:20px" aria-hidden="true"></div>
+<div aria-hidden="true"></div>
 
 <div>
 <div style="flex-basis:66.66%">
@@ -48,11 +48,11 @@
 
 <div>
 <div>
-<h4 class="has-text-align-center wp-block-heading">But What does it do?!</h4>
+<h2 class="has-text-align-center wp-block-heading">But What does it do?!</h2>
 </div>
 
 <div>
-<h4 class="has-text-align-center wp-block-heading">Why am i here?!</h4>
+<h2 class="has-text-align-center wp-block-heading">Why am i here?!</h2>
 
 <p class="has-text-align-center has-secondary-color has-text-color has-small-font-size wp-block-paragraph">i have no idea</p>
 </div>
@@ -78,7 +78,7 @@
 
 <pre><code>.\adplus.exe -hang -pn lsass.exe -o C:\temp</code></pre>
 
-<h3 class="has-secondary-color has-text-color wp-block-heading"> Here&#8217;s the real reason I cared about this</h3>
+<h2 class="has-secondary-color has-text-color wp-block-heading"> Here&#8217;s the real reason I cared about this</h2>
 
 <p>I do most of my testing against a fully patched windows 10 machine with Windows Defender in it&#8217;s default state. Despite the grief it gets, it does a decent job against a wide variety of things. This includes protecting Lsass, actually. By default, a memory dump of the lsass process is triggered by Defender as an LSASSAttack and the corresponding DMP file is completely deleted before you can do anything with it. </p>
 

@@ -1,4 +1,4 @@
-<h3>TL;DR </h3>
+<h2>TL;DR </h2>
 
 <p>For people that just want the slides and <a href="https://github.com/galoryber/AutoPatch" target="_blank" rel="noopener" title="">github link</a></p>
 
@@ -89,7 +89,7 @@ c3                  ret</code></pre>
 
 <p>Some of the most basic byte patches are simply a single C3 operation written to the beginning of the function to cause it to immediately exit.<br><a href="https://github.com/reveng007/AMSI-patches-learned-till-now" target="_blank" rel="noopener" title="">https://github.com/reveng007/AMSI-patches-learned-till-now</a> &lt;- see example 1b or 2a. </p>
 
-<h5>In fact&#8230; writing any bytes from these known patches would actually avoid detections&#8230; <br><br>&#8230;If I skipped writing a C3 operation. </h5>
+<h3>In fact&#8230; writing any bytes from these known patches would actually avoid detections&#8230; <br><br>&#8230;If I skipped writing a C3 operation. </h3>
 
 <h2>Returning out of a function call &#8211; POP [reg] JMP [reg]</h2>
 
@@ -114,7 +114,7 @@ jmp rax</code></pre>
 
 <figure><img width="545" height="66" src="/img/posts/2025-01-ApolloFromMerlin.png" alt="" /></figure>
 
-<h5>Why is this important?</h5>
+<h3>Why is this important?</h3>
 
 <p>If we make the assumption that these patch detections are relatively static, then we just need to have an acceptable way to obfuscate our actions while achieving the same result. All we really need is execution of the return address, so we could modify our current &#8216;pop rax, jmp rax&#8217; to any other registers, and conflate the whole process with a bunch of non-sense operations.</p>
 
@@ -135,7 +135,7 @@ produces FF9090FF90
 hexdump -v -e'/1 "'0x'%02x','"' yourFile
 produces \0xFF,\0x90,\0x90</code></pre>
 
-<figure><img width="478" height="484" src="/img/posts/2025-01-image-4.png" alt="" style="width:478px;height:auto" /><figcaption class="wp-element-caption">a few non-sense ops along with a pop and jmp</figcaption></figure>
+<figure><img width="478" height="484" src="/img/posts/2025-01-image-4.png" alt="" /><figcaption class="wp-element-caption">a few non-sense ops along with a pop and jmp</figcaption></figure>
 
 <p>This worked exactly as intended, the bytes were successfully written without detection and I was able to load apollo alongside other malicious C# assemblies. </p>
 
@@ -161,7 +161,7 @@ produces \0xFF,\0x90,\0x90</code></pre>
 
 <p>By overwriting amsi!AmsiScanBuffer with those two bytes, the patch will cause calls to the function to jump back to the C3 function just a few bytes back, successfully exiting the call without productions detections. </p>
 
-<h4>Differences in AMSI between Windows versions</h4>
+<h3>Differences in AMSI between Windows versions</h3>
 
 <p><em>It&#8217;s worth noting, there is no guarantee that the amsi DLL will always be formatted the same, and as a result any jump operations to nearby C3&#8217;s are likely to change in different versions of amsi.dll.</em></p>
 

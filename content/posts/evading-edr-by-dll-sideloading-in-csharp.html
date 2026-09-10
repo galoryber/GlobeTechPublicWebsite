@@ -8,7 +8,7 @@
 
 <p></p>
 
-<h4>What do I mean Bypass EDR? </h4>
+<h2>What do I mean Bypass EDR? </h2>
 
 <p>Well if I use some sort of basic shellcode runner, like this as a starting point. <a href="https://github.com/nettitude/PoshC2/blob/master/resources/payload-templates/csc.cs" target="_blank" rel="noopener" title="">https://github.com/nettitude/PoshC2/blob/master/resources/payload-templates/csc.cs </a></p>
 
@@ -16,6 +16,7 @@
 
 <div>
 <div style="flex-basis:33.33%">
+<div class="figure-row figure-row-3">
 <figure><img width="529" height="546" src="/img/posts/2023-05-SourceCode-1.png" alt="" /></figure>
 </div>
 
@@ -26,7 +27,7 @@
 </div>
 </div>
 
-<h4>What is DLL Sideloading?</h4>
+<h2>What is DLL Sideloading?</h2>
 
 <div>
 <div style="flex-basis:66.66%">
@@ -52,7 +53,7 @@
 
 <p></p>
 
-<h4>Finding a vulnerable EXE</h4>
+<h2>Finding a vulnerable EXE</h2>
 
 <p>To start, I get some signed binaries. I like the <a href="https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/">Microsoft SDK </a>for signed EXEs. Particularly because they don&#8217;t typically exist on disk by default (which is huge for certain EDR detection capabilities), but they commonly NEED DLLs alongside them to function. The only way for that to happen is for both to be brought down to disk in a random directory and executed together. Since they&#8217;re signed by MS, they tend to be inherently more trusted. </p>
 
@@ -68,7 +69,7 @@
 </div>
 </div>
 
-<h4><strong>Testing with OleView</strong></h4>
+<h2><strong>Testing with OleView</strong></h2>
 
 <p>We&#8217;re going to copy oleview into C:\temp\exes. Oleview is a good example tool for a couple of reasons. One, it isn&#8217;t normally on disk somewhere, and that is actually a pretty good detection point. Some EDRs are smart enough to witness when an EXE already lives in System32. Since a normal user has a PATH entry that would find EXEs in System32, some EDRs will outright block those exes from running outside of that directory since it&#8217;s likely they&#8217;re just being abused for DLL sideloading. </p>
 
@@ -86,7 +87,7 @@
 </div>
 </div>
 
-<h4><strong>Inspecting the original DLL</strong></h4>
+<h2><strong>Inspecting the original DLL</strong></h2>
 
 <p>Back in the SDK folder we can find the original iviewers.dll and we can use this to look at the functions that are normally available through this DLL. </p>
 
@@ -104,7 +105,7 @@
 </div>
 </div>
 
-<h4><strong>Writing our own DLL</strong></h4>
+<h2><strong>Writing our own DLL</strong></h2>
 
 <p>Often PoCs are written in C /C++. I prefer C#, but this preference causes some problems for us. To understand this, we need to understand the difference between managed and unmanaged code.</p>
 
@@ -116,7 +117,7 @@
 
 <figure><img width="514" height="241" src="/img/posts/2023-05-Compiling.png" alt="" /></figure>
 
-<h4>C# DLL- No Exports and Manually Exporting Methods</h4>
+<h2>C# DLL- No Exports and Manually Exporting Methods</h2>
 
 <p>To review this, and prove ourselves correct, we can create a C# based DLL and create methods inside it. Even though our method names might be the same as, once we compile it and open the DLL with something like CFF explorer, we&#8217;ll see that there is no &#8220;Export Directory&#8221;. So a standard C# .NET Assembly doesn&#8217;t export functions the same way unmanaged code does. You&#8217;ll notice that there is a .NET Directory, so it recognizes that we&#8217;re looking at a different structure here. </p>
 
@@ -141,14 +142,15 @@
 <figure><img width="624" height="300" src="/img/posts/2023-05-ManualEditIL.png" alt="" /></figure>
 
 <figure><img width="570" height="35" src="/img/posts/2023-05-ReAsmbIL.png" alt="" /></figure>
-</div>
+</div></div>
 </div>
 
 <p>This time, we&#8217;ll see that it&#8217;s still a .NET assembly of course, but now we have an Export Directory, with the function name properly exported. This is enough for an application to believe that the functionality is present, it won&#8217;t do any checks to see that the code does what it expects.</p>
 
+<div class="figure-row figure-row-3">
 <figure><img width="832" height="520" src="/img/posts/2023-05-ManuallyExported.png" alt="" /></figure>
 
-<h4>C# DLL- DLLExport Nuget Package</h4>
+<h2>C# DLL- DLLExport Nuget Package</h2>
 
 <p>While we certainly could do this manually, we don&#8217;t have to. There is more than one way to make this easier for you, but I like the Nuget package DLLExport. If you install that package to your project, you can add the &#8216;[DLLExport]&#8217; decorator to your C# method and the methods will be properly exported to the EAT.</p>
 
@@ -164,15 +166,14 @@
 
 <p>With the DLLExport Nuget package installed, we can compile the new DLL with the methods exported. The newly compiled DLL can be renamed to iviewers.dll and now we&#8217;ll be able to load it into oleview if we keep them in the same directory. The execution shows our msfvenom Message Box shellcode being loaded inside of oleview. </p>
 
-<h4><strong>Oleview PoC</strong></h4>
+<h2><strong>Oleview PoC</strong></h2>
 
 <p>The moment of truth, if we take our newly compiled DLL and rename it to iviewers.dll, then we can copy it into the same directory as oleview. This should be enough to get our execution. Oleview will launch, look for iviewers.dll, find our dll, check that the exports it expects are actually present, and finally execute. </p>
 
 <figure><img width="414" height="50" src="/img/posts/2023-05-CPExpIviewers.png" alt="" /></figure>
 
 <figure><img width="379" height="385" src="/img/posts/2023-05-OlePoC.png" alt="" /></figure>
-
-<h4><strong>Why would this work</strong></h4>
+</div><h2><strong>Why would this work</strong></h2>
 
 <p>So we created an export&#8230; why does this work? We&#8217;re still loading oleview, which has no idea that bytecode is a thing. In fact, if we look at oleview running, we can see the clr.dll isn&#8217;t even loaded, so it doesn&#8217;t have any way to process managed code like our C# DLL. </p>
 
@@ -188,7 +189,7 @@
 </div>
 </div>
 
-<h4><strong>Cool, but I don&#8217;t write code</strong></h4>
+<h2><strong>Cool, but I don&#8217;t write code</strong></h2>
 
 <div>
 <div style="flex-basis:66.66%">
@@ -202,7 +203,7 @@
 
 <p> </p>
 
-<h4><strong>Didn&#8217;t this just break Oleview?</strong></h4>
+<h2><strong>Didn&#8217;t this just break Oleview?</strong></h2>
 
 <p>Absolutely, but in our case, we may just want a C2 beacon executed. We&#8217;re only doing it with oleview to gain extra trust from our security tools by executing within a legitimate tool. </p>
 
@@ -212,7 +213,7 @@
 
 <figure><img width="1024" height="302" src="/img/posts/2023-05-SharpDLLProxy-1024x302.png" alt="" /></figure>
 
-<h4><strong>Blue Team</strong></h4>
+<h2><strong>Blue Team</strong></h2>
 
 <p>I won&#8217;t pretend to be a wise blue teamer, but there are some possible detection options and threads to pull on. </p>
 
@@ -236,6 +237,6 @@
 
 <p></p>
 
-<h4>Presentation Slides</h4>
+<h2>Presentation Slides</h2>
 
 <div><a id="wp-block-file--media-b4f2bbb6-64aa-496f-87e4-499abd814b53" href="/media/2023-05-DLL-Sideloading.pptx">DLL-Sideloading</a><a href="/media/2023-05-DLL-Sideloading.pptx" download aria-describedby="wp-block-file--media-b4f2bbb6-64aa-496f-87e4-499abd814b53">Download</a></div>
