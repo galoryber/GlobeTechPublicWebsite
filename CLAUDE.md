@@ -56,8 +56,11 @@ only to the 3CX cloud instance.
 
 Two deliberate choices:
 
-- **It loads on the contact page only.** The bundle is 693 KB and the chat is
-  nearly never used, so site-wide loading would be poor value.
+- **It loads on every page.** The contact page's own copy says "the fastest way
+  to contact GlobeTech LLC is by using the Messaging Icon in the corner of any
+  page" — the chat is the site's stated primary contact route, not a
+  nice-to-have, so it has to actually be on every page. It costs 693 KB
+  deferred, which is the price of the copy being true.
 - **The script is vendored** into `static/js/`. 3CX does not publish a working
   CDN URL for it. That means it will not receive updates — if the widget ever
   breaks, re-download it from a 3CX-provided embed snippet rather than debugging
@@ -119,11 +122,26 @@ Mail records — MX, SPF (which includes `zohosign.com` and `sender.zohoinvoice.
 for invoicing and e-signature), autodiscover — are untouched by any of this and
 must stay that way.
 
+## No email address is published, on purpose
+
+The old site said, in its own words: *"I don't list a public phone number or
+email address to avoid spam, so fill in the form and I'll get a real-time
+notification."* The first build of this site put `gary.lobermier@globetech.biz`
+in the footer and in the JSON-LD of every page, which contradicted that policy
+and handed the address to every scraper on the internet.
+
+`content/site.json` still holds `email` for internal use, but **nothing renders
+it and it is not in the structured data**. The chat widget is the contact route.
+
+**Do not "helpfully" add a mailto link to the footer or a contact card.** If a
+written contact route is wanted, the right answer is a form backed by a
+third-party endpoint (Formspree or similar), not a published address.
+
 ## Gotchas
 
 - **Blog comments are gone.** WordPress handled them; a static site cannot. This
   was an accepted loss, not an oversight.
 - `/feed.xml` is new. The old site's `/feed/` 404'd, so no existing subscriber
   was broken.
-- The old site had no DMARC record. Still true, still worth raising, still
-  outside the scope of this repo.
+- **globetech.biz has DMARC at `p=reject`**, configured natively in Microsoft
+  365. An earlier note in this file claimed it did not — that was wrong.

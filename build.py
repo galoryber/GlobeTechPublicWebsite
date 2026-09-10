@@ -65,7 +65,6 @@ def layout(*, title, description, path, body, extra_head="", body_end=""):
     jsonld = {
         "@context": "https://schema.org", "@type": "ProfessionalService",
         "name": SITE["name"], "url": SITE["url"], "description": SITE["description"],
-        "email": SITE["email"],
         "address": {"@type": "PostalAddress", "addressRegion": "WI", "addressCountry": "US"},
         "areaServed": "US",
         "serviceType": ["Penetration Testing", "Vulnerability Assessment",
@@ -115,7 +114,7 @@ def layout(*, title, description, path, body, extra_head="", body_end=""):
       <div class="footer-grid">
         <div>
           <p style="margin:0 0 6px"><strong>{e(SITE["name"])}</strong> — {e(SITE["hometown"])}</p>
-          <p style="margin:0"><a href="mailto:{e(SITE["email"])}">{e(SITE["email"])}</a></p>
+          <p style="margin:0">Contact via the chat button, bottom right.</p>
         </div>
         <nav class="nav" aria-label="Footer">
 {nav_html("")}
@@ -124,6 +123,9 @@ def layout(*, title, description, path, body, extra_head="", body_end=""):
       <p class="footer-legal">© {year} {e(SITE["name"])}. All rights reserved.</p>
     </div>
   </footer>
+  <call-us-selector phonesystem-url="{e(SITE["chat"]["phonesystem_url"])}"
+                    party="{e(SITE["chat"]["party"])}" enable-poweredby="false"></call-us-selector>
+  <script defer src="/js/callus.js"></script>
 {body_end}</body>
 </html>
 """
@@ -253,14 +255,8 @@ def render_page(pg) -> str:
     body_html = page_body(pg["slug"])
     desc = first_paragraph(body_html)
 
-    # 3CX live chat runs only on the contact page: it is a 693 KB bundle and is
-    # nearly never used, so loading it site-wide would be poor value.
     extra_head = body_end = ""
     widget = ""
-    if pg["route"] == "/contact/":
-        widget = (f'\n        <call-us-selector phonesystem-url="{e(SITE["chat"]["phonesystem_url"])}" '
-                  f'party="{e(SITE["chat"]["party"])}" enable-poweredby="false"></call-us-selector>')
-        body_end = '  <script defer src="/js/callus.js"></script>\n'
 
     body = f"""    <div class="page-head">
       <div class="wrap">

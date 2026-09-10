@@ -255,3 +255,23 @@ a.card:hover { border-color: var(--rule-firm); transform: translateY(-2px); }
 .training li { font-family: var(--mono); font-size: .78rem; letter-spacing: .02em;
   color: var(--ink-soft); background: var(--sunk); border: 1px solid var(--rule);
   border-radius: 999px; padding: 7px 15px; }
+
+/* ---------- imported figure runs ---------- */
+
+/* WordPress emitted consecutive images as a vertical stack, which read as a
+   clump of unrelated pictures. Laid out as a row they read as a set. */
+.prose .figure-row { display: grid; gap: 14px; margin: 1.8em 0; }
+.prose .figure-row-2 { grid-template-columns: repeat(2, 1fr); }
+.prose .figure-row-3 { grid-template-columns: repeat(3, 1fr); }
+.prose .figure-row figure { margin: 0; }
+.prose .figure-row img { margin: 0; width: 100%; height: 190px; object-fit: cover; }
+@media (max-width: 620px) {
+  .prose .figure-row-2, .prose .figure-row-3 { grid-template-columns: 1fr; }
+  .prose .figure-row img { height: auto; }
+}
+
+/* Single imported images sat at whatever width WordPress pinned them to.
+   Cap them so a column of pictures reads at one consistent size. */
+.prose > figure > img,
+.prose > p > img { max-width: 100%; margin-left: auto; margin-right: auto; }
+.prose > figure { margin-left: 0; margin-right: 0; }
