@@ -143,26 +143,46 @@ def page_body(slug: str) -> str:
     return (CONTENT / "pages" / f"{slug}.html").read_text(encoding="utf-8")
 
 
-def render_page(pg) -> str:
-    body_html = page_body(pg["slug"])
-    desc = first_paragraph(body_html)
+def render_home() -> str:
+    """The home page is composed, not imported.
 
-    if pg["route"] == "/":
-        services = [p for p in PAGES if p["is_service"]]
-        cards = "\n".join(f"""          <a class="card" href="{s["route"]}">
-            <h3>{e(s["nav_label"])}</h3>
-            <p>{e(first_paragraph(page_body(s["slug"]), 110))}</p>
-            <span class="more">Read more →</span>
-          </a>""" for s in services)
-        recent = "\n".join(f"""          <li><a class="post-link" href="/blog/{e(p["slug"])}/">
+    WordPress emitted this page as a single body with the heading levels out of
+    order (h3, then h1, then h4), a stock banner, an unreadable 108px-tall
+    screenshot, a duplicate blog list, and six 400px certification badges
+    stacked down a text column. Rebuilding it from structured content in
+    home.json is what makes the layout controllable.
+    """
+    services = [p for p in PAGES if p["is_service"]]
+    cards = "\n".join(f"""          <a class="card" href="{s_["route"]}">
+            <h3>{e(s_["nav_label"])}</h3>
+            <p>{e(first_paragraph(page_body(s_["slug"]), 110))}</p>
+            <span class="more">Read more &rarr;</span>
+          </a>""" for s_ in services)
+
+    recent = "\n".join(f"""          <li><a class="post-link" href="/blog/{e(p["slug"])}/">
             <time datetime="{e(p["date"])}">{dt.date.fromisoformat(p["date"]).strftime("%b %-d, %Y")}</time>
             <span><h3>{e(p["title"])}</h3><p>{e(p["excerpt"][:150])}</p></span>
           </a></li>""" for p in POSTS[:4])
 
-        body = f"""    <section class="hero">
+    intro = "\n".join(f"          <p>{e(t)}</p>" for t in HOME["intro"])
+
+    caps = "\n".join(f'            <li>{e(c)}</li>' for c in HOME["capabilities"])
+
+    badges = "\n".join(f"""            <li class="badge">
+              <img src="/img/badges/{e(c["badge"])}" alt="{e(c["full"])}" width="150" height="150" loading="lazy">
+              <span class="badge-name">{e(c["name"])}</span>
+            </li>""" for c in HOME["credentials"])
+
+    training = "\n".join(f'            <li>{e(t)}</li>' for t in HOME["training"])
+
+    return layout(
+        title=f'{SITE["name"]} | {SITE["tagline"]}',
+        description=SITE["description"],
+        path="/",
+        body=f"""    <section class="hero">
       <div class="wrap">
-        <p class="eyebrow">Wisconsin · Vulnerability assessment &amp; penetration testing</p>
-        <h1>Find the gaps before somebody else does</h1>
+        <p class="eyebrow">{e(HOME["hero_eyebrow"])}</p>
+        <h1>{e(HOME["hero_heading"])}</h1>
         <p class="lede">{e(SITE["description"])}</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="/contact/">Start a conversation</a>
@@ -173,8 +193,17 @@ def render_page(pg) -> str:
 
     <section class="section">
       <div class="wrap">
-        <div class="prose wide">
-{body_html}
+        <div class="intro-split">
+          <div class="prose">
+            <h2>{e(HOME["intro_heading"])}</h2>
+{intro}
+          </div>
+          <div class="capabilities">
+            <p class="eyebrow">{e(HOME["capabilities_heading"])}</p>
+            <ul>
+{caps}
+            </ul>
+          </div>
         </div>
       </div>
     </section>
@@ -189,6 +218,23 @@ def render_page(pg) -> str:
       </div>
     </section>
 
+    <section class="section credentials-band">
+      <div class="wrap">
+        <p class="eyebrow">{e(HOME["credentials_heading"])}</p>
+        <h2>Held, current, and verifiable</h2>
+        <p class="standfirst" style="margin-bottom:34px">{e(HOME["credentials_note"])}</p>
+        <ul class="badges">
+{badges}
+        </ul>
+        <ul class="training">
+{training}
+        </ul>
+        <p style="margin-top:26px">
+          <a class="btn btn-ghost" href="{e(HOME["credly_url"])}">Verify on Credly</a>
+        </p>
+      </div>
+    </section>
+
     <section class="section">
       <div class="wrap">
         <p class="eyebrow">Writing</p>
@@ -200,9 +246,12 @@ def render_page(pg) -> str:
       </div>
     </section>
 
-{CTA}"""
-        return layout(title=f'{SITE["name"]} | {SITE["tagline"]}', description=SITE["description"],
-                      path="/", body=body)
+{CTA}""")
+
+
+def render_page(pg) -> str:
+    body_html = page_body(pg["slug"])
+    desc = first_paragraph(body_html)
 
     # 3CX live chat runs only on the contact page: it is a 693 KB bundle and is
     # nearly never used, so loading it site-wide would be poor value.
@@ -358,6 +407,7 @@ FAVICON = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
 
 PAGES = json.loads((CONTENT / "pages.json").read_text(encoding="utf-8"))
 POSTS = json.loads((CONTENT / "posts.json").read_text(encoding="utf-8"))
+HOME = json.loads((CONTENT / "home.json").read_text(encoding="utf-8"))
 
 
 def build():
@@ -366,9 +416,9 @@ def build():
     shutil.copytree(STATIC, DIST)
     write(DIST / "img" / "favicon.svg", FAVICON)
 
+    write(DIST / "index.html", render_home())
     for pg in PAGES:
-        out = DIST / pg["route"].strip("/") / "index.html" if pg["route"] != "/" else DIST / "index.html"
-        write(out, render_page(pg))
+        write(DIST / pg["route"].strip("/") / "index.html", render_page(pg))
 
     for p in POSTS:
         write(DIST / "blog" / p["slug"] / "index.html", render_post(p))
@@ -389,7 +439,7 @@ def build():
               legacy_stub(p["legacy_path"], f'/blog/{p["slug"]}/'))
         stubs += 1
 
-    urls = [pg["route"] for pg in PAGES] + ["/blog/"] + [f'/blog/{p["slug"]}/' for p in POSTS]
+    urls = ["/"] + [pg["route"] for pg in PAGES] + ["/blog/"] + [f'/blog/{p["slug"]}/' for p in POSTS]
     body = "\n".join(f"  <url><loc>{BASE}{u}</loc></url>" for u in urls)
     write(DIST / "sitemap.xml",
           '<?xml version="1.0" encoding="UTF-8"?>\n'

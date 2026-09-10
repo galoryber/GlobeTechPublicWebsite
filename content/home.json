@@ -1,0 +1,59 @@
+{
+  "hero_heading": "Find the gaps before somebody else does",
+  "hero_eyebrow": "Wisconsin \u00b7 Vulnerability assessment & penetration testing",
+  "intro_heading": "Vulnerability assessments and penetration testing with powerful adversarial emulation",
+  "intro": [
+    "GlobeTech LLC is a Wisconsin based business offering Vulnerability Assessments and Penetration Testing services. If you\u2019re looking to review your security posture or need to analyze risk to meet compliance, GlobeTech LLC can provide threat and vulnerability analysis around your organization and your information systems.",
+    "Cyber Security is at the forefront of professional minds as more and more companies look to rely on technology for their success. Enforcing security within technology is integral to that success. GlobeTech LLC services help identify vulnerabilities to keep your IT systems secure.\u00a0 More than that, these services can help you achieve regulatory compliance within a number of industry domains, like HIPAA, PCI, SOC, and more."
+  ],
+  "capabilities_heading": "What we do",
+  "capabilities": [
+    "Vulnerability scanning",
+    "Penetration testing",
+    "Wireless auditing",
+    "Application testing",
+    "Severity reporting",
+    "Active Directory auditing",
+    "Social engineering",
+    "Password cracking"
+  ],
+  "credentials_heading": "Credentials",
+  "credentials_note": "Certifications held by GlobeTech's principal consultant. Verifiable on Credly.",
+  "credly_url": "https://www.credly.com/users/gary-lobermier",
+  "credentials": [
+    {
+      "name": "OSWE",
+      "full": "Offensive Security Web Expert",
+      "badge": "2023-03-OSWE.png"
+    },
+    {
+      "name": "OSEP",
+      "full": "Offensive Security Experienced Penetration Tester",
+      "badge": "2023-03-OSEP.png"
+    },
+    {
+      "name": "OSCP",
+      "full": "Offensive Security Certified Professional",
+      "badge": "2023-03-OSCP.png"
+    },
+    {
+      "name": "OSWP",
+      "full": "Offensive Security Wireless Professional",
+      "badge": "2023-03-OSWP.png"
+    },
+    {
+      "name": "GWAPT",
+      "full": "GIAC Web Application Penetration Tester",
+      "badge": "2020-04-Template_GWAPT.png"
+    },
+    {
+      "name": "GIAC Advisory Board",
+      "full": "GIAC Advisory Board",
+      "badge": "2020-04-giac_advisory_board-badge.png"
+    }
+  ],
+  "training": [
+    "SANS SEC588 \u2014 Cloud Penetration Testing",
+    "ICS/SCADA Cyber Security 101 and 301v"
+  ]
+}

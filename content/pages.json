@@ -1,14 +1,5 @@
 [
   {
-    "slug": "globetech-dotbiz",
-    "title": "Vulnerability Assessments and Penetration Testing",
-    "legacy_path": "/",
-    "route": "/",
-    "nav_label": "Home",
-    "in_nav": false,
-    "is_service": false
-  },
-  {
     "slug": "about-globetech",
     "title": "About GlobeTech",
     "legacy_path": "/index.php/about-globetech/",
