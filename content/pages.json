@@ -24,7 +24,8 @@
     "route": "/services/network-penetration-testing/",
     "nav_label": "Network Penetration Testing",
     "in_nav": false,
-    "is_service": true
+    "is_service": true,
+    "tier": "Recommended service"
   },
   {
     "slug": "external-vulnerability-scanning",
@@ -33,7 +34,8 @@
     "route": "/services/external-vulnerability-scanning/",
     "nav_label": "External Vulnerability Scanning",
     "in_nav": false,
-    "is_service": true
+    "is_service": true,
+    "tier": "Included in penetration testing"
   },
   {
     "slug": "internal-vulnerability-scanning",
@@ -42,7 +44,8 @@
     "route": "/services/internal-vulnerability-scanning/",
     "nav_label": "Internal Vulnerability Scanning",
     "in_nav": false,
-    "is_service": true
+    "is_service": true,
+    "tier": "Included in penetration testing"
   },
   {
     "slug": "web-application-penetration-testing",
@@ -51,7 +54,8 @@
     "route": "/services/web-application-penetration-testing/",
     "nav_label": "Web Application Penetration Testing",
     "in_nav": false,
-    "is_service": true
+    "is_service": true,
+    "tier": "Recommended service"
   },
   {
     "slug": "wifi-testing-services",
@@ -60,7 +64,8 @@
     "route": "/services/wifi-testing/",
     "nav_label": "WiFi Testing",
     "in_nav": false,
-    "is_service": true
+    "is_service": true,
+    "tier": "Included in penetration testing"
   },
   {
     "slug": "pricing",

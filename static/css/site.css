@@ -275,3 +275,24 @@ a.card:hover { border-color: var(--rule-firm); transform: translateY(-2px); }
 .prose > figure > img,
 .prose > p > img { max-width: 100%; margin-left: auto; margin-right: auto; }
 .prose > figure { margin-left: 0; margin-right: 0; }
+
+/* ---------- WordPress galleries ---------- */
+
+/* A gallery is a <figure> containing <figure> children. Laid out as a row so a
+   set of images reads as a set rather than a tall column of unrelated photos. */
+.prose figure.gallery { display: grid; gap: 14px; margin: 1.8em 0;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.prose figure.gallery figure { margin: 0; }
+.prose figure.gallery img { margin: 0; width: 100%; height: 180px; object-fit: cover; }
+@media (max-width: 560px) {
+  .prose figure.gallery { grid-template-columns: 1fr; }
+  .prose figure.gallery img { height: auto; }
+}
+
+/* Single imported images ran at whatever width WordPress pinned. Now that the
+   inline sizes are gone, cap them so a page of pictures reads consistently. */
+.prose > figure:not(.gallery) img { max-width: 620px; margin-left: auto; margin-right: auto; }
+
+.card .tier { font-family: var(--mono); font-size: .68rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--signal); margin: 0 0 8px; }
+.card h2 { margin: 0 0 8px; font-size: 1.08rem; color: var(--navy); letter-spacing: -.01em; }

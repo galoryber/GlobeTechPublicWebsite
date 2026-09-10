@@ -26,14 +26,40 @@ Pure standard library. `dist/` is gitignored — GitHub Actions builds on push.
 | Post metadata, newest first | `content/posts.json` |
 | Name, description, email, chat config | `content/site.json` |
 
-Bodies are **HTML, not Markdown** — they were imported from WordPress and kept as
-rendered HTML so nothing was lost in translation. `build.py` wraps them in the
-layout; it does not rewrite them. Styling for imported markup lives under
-`.prose` in the stylesheet.
+Bodies are **plain HTML, not Markdown** — paragraphs, headings, lists, figures
+and links, and nothing else. `build.py` wraps them in the layout; it does not
+rewrite them. Styling lives under `.prose` in the stylesheet.
+
+WordPress class attributes have been stripped: of the 160 it emitted, the
+stylesheet used two. `wp-block-paragraph`, `has-text-color`,
+`has-large-font-size` and the rest styled nothing here and made the content hard
+to read. **Do not reintroduce presentational classes or inline styles into
+content** — presentation belongs to the stylesheet. The only classes CSS looks
+for in content are `gallery` (a figure containing figures) and `aligncenter`.
 
 `tools/ingest_wordpress.py` performed the one-time import. It is kept so the
 import is reproducible and its decisions are visible. **Do not re-run it against
 the live WordPress site once that site is gone.**
+
+## Tooling, and one warning about it
+
+- `tools/ingest_wordpress.py` — the one-time import. The old WordPress site is
+  now stopped, so **this can no longer be re-run**. Content in `content/` is the
+  only copy; git history is the backup.
+- `tools/tidy_imported_html.py` — normalises heading outlines, strips inline
+  styles, removes empty divs, marks galleries. **Idempotent** — verified by
+  running twice and getting no changes on the second pass.
+- `tools/strip_wp_classes.py` — removes dead WordPress attributes. Idempotent.
+- `tools/prepare_images.py` — caps image width, strips metadata.
+
+**The warning:** an earlier version of the tidy tool tried to rewrite runs of
+`<figure>` elements into a grid wrapper using a regex. It ran past the closing
+tag, swallowed headings and paragraphs into the wrapper, and broke two pages.
+It also used per-page heading maps that were not idempotent, so a second run
+re-mapped what the first had fixed. Both were recovered from git history.
+
+If you write a tool that rewrites content HTML: make it idempotent, prove it by
+running it twice, and prefer *marking* markup for CSS over restructuring it.
 
 ## URLs — read before renaming anything
 

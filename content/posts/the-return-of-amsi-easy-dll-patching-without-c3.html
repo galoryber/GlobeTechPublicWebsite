@@ -1,19 +1,19 @@
 <h2>TL;DR </h2>
 
-<p>For people that just want the slides and <a href="https://github.com/galoryber/AutoPatch" target="_blank" rel="noopener" title="">github link</a></p>
+<p>For people that just want the slides and <a href="https://github.com/galoryber/AutoPatch" target="_blank" rel="noopener">github link</a></p>
 
-<div><a id="wp-block-file--media-8b5134fb-3257-417c-87f2-7db36a800d6b" href="/media/2025-06-ReturnOfAMSI.pptx">ReturnOfAMSI</a><a href="/media/2025-06-ReturnOfAMSI.pptx" download aria-describedby="wp-block-file--media-8b5134fb-3257-417c-87f2-7db36a800d6b">Download</a></div>
+<div><a id="wp-block-file--media-8b5134fb-3257-417c-87f2-7db36a800d6b" href="/media/2025-06-ReturnOfAMSI.pptx">ReturnOfAMSI</a><a href="/media/2025-06-ReturnOfAMSI.pptx" download>Download</a></div>
 
 <h2>AMSI and ETW detections</h2>
 
 <p>If you&#8217;ve been tapped into Defender (Home and / or Endpoint Product) since the end of Summer 2024, you&#8217;ve no doubt seen the newer AMSI and ETW patch detections. In fact, a lot of tooling has changed as a result.</p>
 
 <ul>
-<li>Want to <a href="https://github.com/BishopFox/sliver/issues/1759" target="_blank" rel="noopener" title="">generate Sliver shellcode</a>? The recommendation became -&gt; generate an EXE and create shellcode using Donut <strong>without </strong>the AMSI/ETW patches enabled.</li>
+<li>Want to <a href="https://github.com/BishopFox/sliver/issues/1759" target="_blank" rel="noopener">generate Sliver shellcode</a>? The recommendation became -&gt; generate an EXE and create shellcode using Donut <strong>without </strong>the AMSI/ETW patches enabled.</li>
 
-<li>Want to <a href="https://github.com/MythicAgents/Apollo/commit/16bb9850021d3712ffd9814bb90f05e288b95e6c" target="_blank" rel="noopener" title="">generate Apollo shellcode</a>? The same feature was added recently to generate shellcode WITHOUT the donut AMSI patching by default.</li>
+<li>Want to <a href="https://github.com/MythicAgents/Apollo/commit/16bb9850021d3712ffd9814bb90f05e288b95e6c" target="_blank" rel="noopener">generate Apollo shellcode</a>? The same feature was added recently to generate shellcode WITHOUT the donut AMSI patching by default.</li>
 
-<li>Even stock tooling is patching AMSI by default, like the .NET loader <a href="https://github.com/Ne0nd0g/merlin-agent/blob/ce155028f7cdc07ede24b87751233db009de0eba/commands/clr_windows.go#L118" target="_blank" rel="noopener" title="">used by Merlin</a>.</li>
+<li>Even stock tooling is patching AMSI by default, like the .NET loader <a href="https://github.com/Ne0nd0g/merlin-agent/blob/ce155028f7cdc07ede24b87751233db009de0eba/commands/clr_windows.go#L118" target="_blank" rel="noopener">used by Merlin</a>.</li>
 </ul>
 
 <p>Overnight, Defender seemed to catch up, and stomp all of these tools. Many of them are dependent on Donut, and since those patches are detected, became minimally useful. </p>
@@ -32,15 +32,15 @@
 
 <blockquote>
 <p><strong>Loaded-module list</strong>. The system can check to see whether a DLL with the same module name is already loaded into memory (no matter which folder it was loaded from).</p>
-<cite><a href="https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order" target="_blank" rel="noopener" title="">https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order</a></cite></blockquote>
+<cite><a href="https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order" target="_blank" rel="noopener">https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order</a></cite></blockquote>
 
 <p>As simple as this is, MDE / Defender does not detect it as malicious. There is nothing stopping you from building your own amsi.dll and having your beacon process load THAT dll before it would load the legitimate amsi.dll from system32. Boom, effectively patched. More importantly, playing with this actually led to me discovering other interesting information about these new detections.</p>
 
 <p>To test this, I used Go to write my own amsi.dll that had matching dll exports for the actual amsi.dll. My exports all just returned 1. While this works, it is effectively limited to processes that you launch, or can load a DLL into. If you were to inject into a process with AMSI already loaded, you wouldn&#8217;t be able to use this technique. </p>
 
-<figure><img width="925" height="634" src="/img/posts/2025-01-image-1.png" alt="" /><figcaption class="wp-element-caption">We can see our shellcode loader called &#8216;myProgram.exe&#8217; is loading the false amsi.dll before the actual amsi.dll can be loaded.</figcaption></figure>
+<figure><img width="925" height="634" src="/img/posts/2025-01-image-1.png" alt="" /><figcaption>We can see our shellcode loader called &#8216;myProgram.exe&#8217; is loading the false amsi.dll before the actual amsi.dll can be loaded.</figcaption></figure>
 
-<p>If you&#8217;re looking to build custom detections for this, start with this Elastic post, they&#8217;ve done great work by already providing this detection and allowing you to benefit from it. <a href="https://www.elastic.co/guide/en/security/current/suspicious-antimalware-scan-interface-dll.html" target="_blank" rel="noopener" title="">https://www.elastic.co/guide/en/security/current/suspicious-antimalware-scan-interface-dll.html </a></p>
+<p>If you&#8217;re looking to build custom detections for this, start with this Elastic post, they&#8217;ve done great work by already providing this detection and allowing you to benefit from it. <a href="https://www.elastic.co/guide/en/security/current/suspicious-antimalware-scan-interface-dll.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/security/current/suspicious-antimalware-scan-interface-dll.html </a></p>
 
 <p></p>
 
@@ -54,7 +54,7 @@
 
 <p>To test this more in depth, I wrote a Go utility that would simply read and write bytes over whatever function calls I defined. This allowed me to read the bytes at amsi!AmsiScanBuffer or ntdll!EtwEventWrite and optionally write whatever bytes I wanted to those locations.</p>
 
-<p>The source code for the memory.go utility seen here is available in the <a href="#Appendix" title="Appendix">Appendix</a> of this article. Once compiled, we can read and write using the utility like this.</p>
+<p>The source code for the memory.go utility seen here is available in the <a href="#Appendix">Appendix</a> of this article. Once compiled, we can read and write using the utility like this.</p>
 
 <figure><img width="492" height="181" src="/img/posts/2025-01-image-2.png" alt="" /></figure>
 
@@ -73,7 +73,7 @@ c3                  ret</code></pre>
 
 <p>To start, I just read the bytes, and re-wrote the same bytes over themselves, effectively nothing changes in the function. This validated that it&#8217;s not directly the action of writing bytes that triggers the detection.</p>
 
-<figure><img width="441" height="294" src="/img/posts/2025-01-image-3.png" alt="" /><figcaption class="wp-element-caption">Overwriting the bytes with the same byte values, no detection, so it&#8217;s not singularly the &#8216;write&#8217; action producing the detection.</figcaption></figure>
+<figure><img width="441" height="294" src="/img/posts/2025-01-image-3.png" alt="" /><figcaption>Overwriting the bytes with the same byte values, no detection, so it&#8217;s not singularly the &#8216;write&#8217; action producing the detection.</figcaption></figure>
 
 <p>It was difficult testing these theories, because the detections were inconsistent across different machines and binaries. I believe my coworker was right when he hypothesized that MS might be doing some A / B testing with the Defender user base. I even noticed different detections based on my memory.exe program, vs actually patching inside of a beacon using the same memory write primitives!</p>
 
@@ -87,7 +87,7 @@ c3                  ret</code></pre>
 
 <p>Likewise, our Etw patch example is simply a NOP sled into a C3 function, exiting the function.</p>
 
-<p>Some of the most basic byte patches are simply a single C3 operation written to the beginning of the function to cause it to immediately exit.<br><a href="https://github.com/reveng007/AMSI-patches-learned-till-now" target="_blank" rel="noopener" title="">https://github.com/reveng007/AMSI-patches-learned-till-now</a> &lt;- see example 1b or 2a. </p>
+<p>Some of the most basic byte patches are simply a single C3 operation written to the beginning of the function to cause it to immediately exit.<br><a href="https://github.com/reveng007/AMSI-patches-learned-till-now" target="_blank" rel="noopener">https://github.com/reveng007/AMSI-patches-learned-till-now</a> &lt;- see example 1b or 2a. </p>
 
 <h3>In fact&#8230; writing any bytes from these known patches would actually avoid detections&#8230; <br><br>&#8230;If I skipped writing a C3 operation. </h3>
 
@@ -108,7 +108,7 @@ jmp rax</code></pre>
 
 <p>If this worked, then our current beacon would be AMSI patched, and we should be able to successfully load an Apollo beacon from the same process. </p>
 
-<figure><img width="371" height="136" src="/img/posts/2025-01-PopJmpRax.png" alt="" /><figcaption class="wp-element-caption">Successfully patching AMSI and ETW without Defender detections</figcaption></figure>
+<figure><img width="371" height="136" src="/img/posts/2025-01-PopJmpRax.png" alt="" /><figcaption>Successfully patching AMSI and ETW without Defender detections</figcaption></figure>
 
 <p>Injecting a C# based beacon (Apollo) into the now patched process, no AMSI patch / ETW patch detections. <br></p>
 
@@ -135,11 +135,11 @@ produces FF9090FF90
 hexdump -v -e'/1 "'0x'%02x','"' yourFile
 produces \0xFF,\0x90,\0x90</code></pre>
 
-<figure><img width="478" height="484" src="/img/posts/2025-01-image-4.png" alt="" /><figcaption class="wp-element-caption">a few non-sense ops along with a pop and jmp</figcaption></figure>
+<figure><img width="478" height="484" src="/img/posts/2025-01-image-4.png" alt="" /><figcaption>a few non-sense ops along with a pop and jmp</figcaption></figure>
 
 <p>This worked exactly as intended, the bytes were successfully written without detection and I was able to load apollo alongside other malicious C# assemblies. </p>
 
-<figure><img width="491" height="189" src="/img/posts/2025-01-image-5.png" alt="" /><figcaption class="wp-element-caption">Writing our test bytes to check for a detection</figcaption></figure>
+<figure><img width="491" height="189" src="/img/posts/2025-01-image-5.png" alt="" /><figcaption>Writing our test bytes to check for a detection</figcaption></figure>
 
 <p>We can now create as many byte patches as we can creatively think up as long as we retrieve the return address and end up executing it. </p>
 
@@ -149,11 +149,11 @@ produces \0xFF,\0x90,\0x90</code></pre>
 
 <p>So if we can find a nearby C3 operation, and just jump to that location, we can effectively return out of the function using C3, without ever writing that op code in our byte patch. Lets look at this in x64dbg.</p>
 
-<figure><img width="790" height="528" src="/img/posts/2025-01-image-6.png" alt="" /><figcaption class="wp-element-caption">AmsiScanBuffer&#8217;s function in amsi.dll and a nearby C3 operation from the previous function AmsiScanString</figcaption></figure>
+<figure><img width="790" height="528" src="/img/posts/2025-01-image-6.png" alt="" /><figcaption>AmsiScanBuffer&#8217;s function in amsi.dll and a nearby C3 operation from the previous function AmsiScanString</figcaption></figure>
 
 <p>If we want to short jump backwards to this address, we need to know how far back to jump. We can calculate this by following the address in the Dump window and highlighting each byte. You&#8217;ll see that the C3 operation is 0x22 back from the AmsiScanBuffer function&#8230; but we also need to account for two additional bytes for our JMP operation, so the first two bytes of the AmsiScanBuffer address are also included in the highlighted bytes.</p>
 
-<figure><img width="1024" height="548" src="/img/posts/2025-01-image-7-1024x548.png" alt="" /><figcaption class="wp-element-caption">Determining our JMP instruction value</figcaption></figure>
+<figure><img width="1024" height="548" src="/img/posts/2025-01-image-7-1024x548.png" alt="" /><figcaption>Determining our JMP instruction value</figcaption></figure>
 
 <p>This means our short jump instruction would simply be </p>
 
@@ -165,7 +165,7 @@ produces \0xFF,\0x90,\0x90</code></pre>
 
 <p><em>It&#8217;s worth noting, there is no guarantee that the amsi DLL will always be formatted the same, and as a result any jump operations to nearby C3&#8217;s are likely to change in different versions of amsi.dll.</em></p>
 
-<p>In fact, EBDC will work against Windows 11 Pro, but the AMSI dll available on Win 10 pro is not the same JMP (EBXX), and therefore requires it&#8217;s own calculation for a nearby C3 jmp. Even still, if you can validate the version of windows you&#8217;re on before executing your amsi patch, you could select a known good byte value to execute your jump. Or you can automate the search process, as seen my <a href="https://github.com/galoryber/AutoPatch" target="_blank" rel="noopener" title="">AutoPatch BOF file</a>. </p>
+<p>In fact, EBDC will work against Windows 11 Pro, but the AMSI dll available on Win 10 pro is not the same JMP (EBXX), and therefore requires it&#8217;s own calculation for a nearby C3 jmp. Even still, if you can validate the version of windows you&#8217;re on before executing your amsi patch, you could select a known good byte value to execute your jump. Or you can automate the search process, as seen my <a href="https://github.com/galoryber/AutoPatch" target="_blank" rel="noopener">AutoPatch BOF file</a>. </p>
 
 <h2>Short or Near</h2>
 
@@ -177,13 +177,13 @@ produces \0xFF,\0x90,\0x90</code></pre>
 
 <p>So those first five bytes should be skipped for easier calculations, seen in the x64dbg screenshot below. </p>
 
-<figure><img width="594" height="350" src="/img/posts/2025-02-image.png" alt="" /><figcaption class="wp-element-caption">On Win 11 24H2, we&#8217;re hex C0 away from a C3 operation</figcaption></figure>
+<figure><img width="594" height="350" src="/img/posts/2025-02-image.png" alt="" /><figcaption>On Win 11 24H2, we&#8217;re hex C0 away from a C3 operation</figcaption></figure>
 
 <pre><code>E9 C0 00 00 00</code></pre>
 
 <p>By writing this set of instructions as our byte patch, we&#8217;ll successfully jump ahead to our C3 operation and exit AmsiScanBuffer without detection. The same method could be used against Win 10 22H2 to determine a valid near jump forward. Seen below, E9 EE 00 00 00 was used to patch and subsequently load an apollo beacon. </p>
 
-<figure><img width="384" height="190" src="/img/posts/2025-02-image-1.png" alt="AMSI" /><figcaption class="wp-element-caption">Win10 22H2 AMSI near jump patch</figcaption></figure>
+<figure><img width="384" height="190" src="/img/posts/2025-02-image-1.png" alt="AMSI" /><figcaption>Win10 22H2 AMSI near jump patch</figcaption></figure>
 
 <h2>Call Instead &#8211; ROP</h2>
 
@@ -204,7 +204,7 @@ RET;</code></pre>
 
 <p>As it turns out, our near jump to the C3 in our above example actually contains this gadget. </p>
 
-<figure><img width="688" height="396" src="/img/posts/2025-02-image-2.png" alt="" /><figcaption class="wp-element-caption">POP RDI; RET gadget in AmsiScanBuffer</figcaption></figure>
+<figure><img width="688" height="396" src="/img/posts/2025-02-image-2.png" alt="" /><figcaption>POP RDI; RET gadget in AmsiScanBuffer</figcaption></figure>
 
 <p>With a small modification to the address, we can execute a CALL instruction to the gadget</p>
 
@@ -214,17 +214,17 @@ RET;</code></pre>
 
 <p>Avoiding C3 return operations is actually a quite simple and effective method to patch AMSI while avoiding detections. We can pop and jump to the stack pointer. We can short jump to a nearby C3 operation, or use near jumps to larger distances. More importantly, we can unnecessarily conflate these instructions with any number of nonsense operations as well to help prevent static signatures. </p>
 
-<p>To help make this easier to implement, I created supported BOF files for Cobalt Strike and Sliver and published them on my <a href="https://github.com/galoryber/AutoPatch" target="_blank" rel="noopener" title="">github under AutoPatch</a>.</p>
+<p>To help make this easier to implement, I created supported BOF files for Cobalt Strike and Sliver and published them on my <a href="https://github.com/galoryber/AutoPatch" target="_blank" rel="noopener">github under AutoPatch</a>.</p>
 
 <p>The BOF files allow you to specify a dll and function name. You can manually read or write memory bytes at that dll function&#8217;s address, so you can get creative and patch amsi or any other dll function with your own patches. </p>
 
-<figure><img width="1024" height="406" src="/img/posts/2025-06-image-1024x406.png" alt="" /><figcaption class="wp-element-caption">Manually writing bytes to a function call using write-memory BOF file</figcaption></figure>
+<figure><img width="1024" height="406" src="/img/posts/2025-06-image-1024x406.png" alt="" /><figcaption>Manually writing bytes to a function call using write-memory BOF file</figcaption></figure>
 
 <p>The autopatch BOF will search nearby that dll function to find a C3 operation, then automatically determine the number of bytes forwards or backwards to JMP and write that patch to memory for you. </p>
 
-<figure><img width="1024" height="950" src="/img/posts/2025-06-image-1-1024x950.png" alt="" /><figcaption class="wp-element-caption">Using the AutoPatch BOF to search for nearby C3s and JMP to them</figcaption></figure>
+<figure><img width="1024" height="950" src="/img/posts/2025-06-image-1-1024x950.png" alt="" /><figcaption>Using the AutoPatch BOF to search for nearby C3s and JMP to them</figcaption></figure>
 
-<h2 id="Appendix">Appendix</h2>
+<h2>Appendix</h2>
 
 <p>Below is some source code for the memory utility I tested with, written in Go. It basically just resolves and reads bytes at a function address, or resolves and writes bytes at a function address. Using this, alongside a debugger to validate that the jumps would move to validate location, I was able to verify each technique. </p>
 
@@ -234,8 +234,6 @@ RET;</code></pre>
 
 <p><a href="/contact/">/contact/</a></p>
 
-<figure><div>
-
-</div></figure>
+<figure></figure>
 
 <p></p>

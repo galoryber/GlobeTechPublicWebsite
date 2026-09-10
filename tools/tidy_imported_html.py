@@ -23,16 +23,6 @@ PAGES = ROOT / "content" / "pages"
 # Heading levels are remapped per page rather than by a generic rule, because
 # the correct level depends on what the heading means. The page title is an h1
 # in the template, so body headings start at h2.
-HEADING_MAPS = {
-    # the five services are siblings; WordPress had three of them as h5
-    "professional-services":               {5: 3},
-    # "Relevant certifications" sat at h3 above the h2s that followed it
-    "penetration-testing-services":        {3: 2, 4: 3},
-    "web-application-penetration-testing": {3: 2, 4: 3},
-    # "Industry Standards" and "GlobeTech CUSTOMIZATION" were h6
-    "wifi-testing-services":               {6: 3},
-}
-
 # Trailing "Contact" sections repeat a call to action the layout already
 # renders as a band at the foot of every page.
 DROP_TRAILING_CONTACT = {
@@ -79,37 +69,65 @@ def normalise_outline(body: str) -> str:
     return re.sub(r"</h[1-6]>", lambda m: f"</h{next(it)}>", body)
 
 
-def remap_headings(body: str, mapping: dict[int, int]) -> str:
-    def repl(m):
-        old = int(m.group(2))
-        new = mapping.get(old, old)
-        return f"<{m.group(1)}h{new}{m.group(3)}"
-    return re.sub(r"<(/?)h([1-6])([^>]*>)",
-                  lambda m: repl(m) if m.group(2).isdigit() else m.group(0), body)
+def strip_inline_styles(body: str) -> str:
+    """Remove inline style attributes from imported markup.
+
+    WordPress carried both pinned pixel sizes (images at 320, 415, 480, 640, 752
+    and 765 px down one column) and hard-coded heading colours — magenta
+    #d709a4, green #2ff425, orange #ff8606 and others that fight the palette
+    entirely. The stylesheet owns presentation now.
+
+    width/height *attributes* are deliberately kept: they give the browser the
+    aspect ratio and prevent layout shift.
+    """
+    return re.sub(r'\s*style="[^"]*"', "", body)
 
 
-def strip_pinned_sizes(body: str) -> str:
-    """Remove inline width/height so the stylesheet controls image sizing.
-
-    These produced images at 320, 415, 480, 640, 752 and 765 pixels down the
-    same column. The width/height *attributes* are kept — they give the browser
-    the aspect ratio and prevent layout shift."""
-    def repl(m):
-        style = m.group(1)
-        style = re.sub(r"\s*(?:width|height)\s*:\s*[^;]+;?", "", style)
-        return f' style="{style.strip()}"' if style.strip() else ""
-    return re.sub(r'\s*style="([^"]*)"', repl, body)
+def drop_empty_divs(body: str) -> str:
+    """Remove structureless leftovers from stripped WordPress column blocks."""
+    body = re.sub(r'<div[^>]*aria-hidden="true"[^>]*>\s*</div>', "", body)
+    for _ in range(4):                                   # unwrap nested shells
+        body = re.sub(r'<div>\s*(<div>[\s\S]*?</div>)\s*</div>', r"\1", body)
+    body = re.sub(r'<div>\s*</div>', "", body)
+    return body
 
 
-def group_figure_runs(body: str) -> str:
-    """Two or more consecutive figures become a row instead of a tall stack."""
-    def repl(m):
-        block = m.group(0)
-        if 'class="figure-row"' in block:
-            return block
-        n = block.count("<figure")
-        return f'<div class="figure-row figure-row-{min(n, 3)}">\n{block.strip()}\n</div>'
-    return re.sub(r'(?:<figure[^>]*>.*?</figure>\s*){2,}', repl, body, flags=re.S)
+def mark_galleries(body: str) -> str:
+    """Tag WordPress galleries so CSS can lay them out as a row.
+
+    A gallery is a <figure> whose direct children are <figure> elements. An
+    earlier version of this tool tried to *rewrite* runs of figures into a grid
+    div and got it badly wrong — the regex ran past the closing tag and
+    swallowed headings and paragraphs into the wrapper, wrecking two pages.
+    Adding a class and letting CSS do the layout touches nothing else.
+    """
+    out = []
+    depth = 0
+    open_positions: list[int] = []
+    tokens = re.split(r'(<figure[^>]*>|</figure>)', body)
+    # Walk the tokens tracking figure depth; an opening tag at depth 0 whose
+    # matching region contains further <figure> opens is a gallery wrapper.
+    idx = 0
+    while idx < len(tokens):
+        tok = tokens[idx]
+        if tok.startswith("<figure"):
+            if depth == 0:
+                # look ahead for a nested figure before this one closes
+                d, j, nested = 1, idx + 1, False
+                while j < len(tokens) and d > 0:
+                    if tokens[j].startswith("<figure"):
+                        d += 1; nested = True
+                    elif tokens[j].startswith("</figure"):
+                        d -= 1
+                    j += 1
+                if nested and "gallery" not in tok:
+                    tok = tok.replace("<figure", '<figure class="gallery"', 1)
+            depth += 1
+        elif tok.startswith("</figure"):
+            depth -= 1
+        out.append(tok)
+        idx += 1
+    return "".join(out)
 
 
 def drop_trailing_contact(body: str) -> str:
@@ -127,19 +145,24 @@ def main():
         body = original = f.read_text(encoding="utf-8")
         notes = []
 
-        if slug in HEADING_MAPS:
-            body = remap_headings(body, HEADING_MAPS[slug])
-            notes.append("headings")
+        fixed = normalise_outline(body)
+        if fixed != body:
+            body = fixed
+            notes.append("outline")
         if 'style="' in body:
-            body = strip_pinned_sizes(body)
-            notes.append("pinned sizes")
+            body = strip_inline_styles(body)
+            notes.append("inline styles")
+        cleaned = drop_empty_divs(body)
+        if cleaned != body:
+            body = cleaned
+            notes.append("empty divs")
         if slug in DROP_TRAILING_CONTACT and re.search(r'<h2[^>]*>\s*Contact\s*</h2>', body, re.I):
             body = drop_trailing_contact(body)
             notes.append("trailing CTA")
-        grouped = group_figure_runs(body)
-        if grouped != body:
-            body = grouped
-            notes.append("figure rows")
+        marked = mark_galleries(body)
+        if marked != body:
+            body = marked
+            notes.append("galleries")
 
         if body != original:
             f.write_text(body, encoding="utf-8")
@@ -160,12 +183,16 @@ def tidy_posts():
             body = fixed
             notes.append("outline")
         if 'style="' in body:
-            body = strip_pinned_sizes(body)
-            notes.append("pinned sizes")
-        grouped = group_figure_runs(body)
-        if grouped != body:
-            body = grouped
-            notes.append("figure rows")
+            body = strip_inline_styles(body)
+            notes.append("inline styles")
+        cleaned = drop_empty_divs(body)
+        if cleaned != body:
+            body = cleaned
+            notes.append("empty divs")
+        marked = mark_galleries(body)
+        if marked != body:
+            body = marked
+            notes.append("galleries")
         if body != original:
             f.write_text(body, encoding="utf-8")
             print(f"  {p['slug'][:44]:<46} {', '.join(notes)}")

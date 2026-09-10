@@ -134,9 +134,11 @@ def layout(*, title, description, path, body, extra_head="", body_end=""):
 CTA = """    <section class="cta">
       <div class="wrap">
         <h2>Ready to find out where you stand?</h2>
-        <p>Tell us about your environment and what you need to demonstrate. We will
-           tell you which assessment actually answers that question.</p>
-        <a class="btn btn-primary" href="/contact/">Get in touch</a>
+        <p>Tell us about your environment and what you need to demonstrate, and we
+           will tell you which assessment actually answers that question. Use the
+           message button in the bottom-right corner of any page &mdash; it is the
+           fastest way to reach us, and often gets a reply in real time.</p>
+        <a class="btn btn-primary" href="/contact/">How to reach us</a>
       </div>
     </section>"""
 
@@ -265,6 +267,20 @@ def render_page(pg) -> str:
     extra_head = body_end = ""
     widget = ""
 
+    extra = ""
+    if pg["route"] == "/services/":
+        services = [x for x in PAGES if x["is_service"]]
+        cards = "\n".join(f"""          <a class="card" href="{x["route"]}">
+            <p class="tier">{e(x.get("tier", ""))}</p>
+            <h2>{e(x["nav_label"])}</h2>
+            <p>{e(first_paragraph(page_body(x["slug"]), 130))}</p>
+            <span class="more">Read more &rarr;</span>
+          </a>""" for x in services)
+        extra = f"""
+        <div class="grid grid-3" style="margin-top:38px">
+{cards}
+        </div>"""
+
     body = f"""    <div class="page-head">
       <div class="wrap">
         <h1>{e(pg["title"])}</h1>
@@ -275,7 +291,7 @@ def render_page(pg) -> str:
       <div class="wrap">
         <div class="prose">
 {body_html}
-        </div>{widget}
+        </div>{extra}{widget}
       </div>
     </section>
 

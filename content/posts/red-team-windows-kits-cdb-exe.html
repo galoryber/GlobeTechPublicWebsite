@@ -1,23 +1,18 @@
-<h2 class="has-text-color has-text-align-center wp-block-heading" style="color:#a90c0c">Blog Preface &#8211; &#8220;Windows Kits&#8221;</h2>
+<h2>Blog Preface &#8211; &#8220;Windows Kits&#8221;</h2>
 
-<p class="has-text-align-center wp-block-paragraph">While running through some MITRE techniques, I happened upon the ADK tools and SDK tools and found a great collection of programs used for development, debugging, and administration. It just so happens, they&#8217;re also great for Red Teaming. Many of them are Digitally Signed by Microsoft, making them a great bypass for Applocker / Application Whitelisting. </p>
+<p>While running through some MITRE techniques, I happened upon the ADK tools and SDK tools and found a great collection of programs used for development, debugging, and administration. It just so happens, they&#8217;re also great for Red Teaming. Many of them are Digitally Signed by Microsoft, making them a great bypass for Applocker / Application Whitelisting. </p>
 
-<div style="grid-template-columns:auto 37%"><figure><img width="796" height="164" src="/img/posts/2020-06-ATTCK_red.png" alt="" /></figure><div>
-<p class="has-large-font-size wp-block-paragraph">In this post, we&#8217;re expanding on the CDB.exe tool that we touched on in the last post. </p>
+<div><figure><img width="796" height="164" src="/img/posts/2020-06-ATTCK_red.png" alt="" /></figure><div>
+<p>In this post, we&#8217;re expanding on the CDB.exe tool that we touched on in the last post. </p>
 </div></div>
 
-<h2 class="has-text-align-center wp-block-heading">T1127 &#8211; Trusted Developer Tools </h2>
+<h2>T1127 &#8211; Trusted Developer Tools </h2>
 
-<h3 class="has-text-align-center wp-block-heading"><a href="https://attack.mitre.org/techniques/T1127/">https://attack.mitre.org/techniques/T1127</a></h3>
-
-<div aria-hidden="true"></div>
+<h3><a href="https://attack.mitre.org/techniques/T1127/">https://attack.mitre.org/techniques/T1127</a></h3>
 
 <p>There are a lot of tools within the realm of T1127, each worthy of review. I took an interest in this one because of its raw and simple power. With a little effort, I could use it to execute my own shell commands, and with a little more effort, my own shellcode. All of which flew under the nose of AV systems. </p>
 
-<div><div></div></div>
-
 <div>
-<div style="flex-basis:66.66%">
 <p>Cdb is a Console Debugger application that is digitally signed by Microsoft. As a debugger, it&#8217;s not hard to imagine why it&#8217;s so powerful. This is an application that is designed to inject into an attached process. We can abuse this to inject our own commands, including shells. </p>
 
 <p>True to this series, it was made available to me when I installed SDK and selected the option for Windows Debugger Kits. (See the last blog post for more info on this).</p>
@@ -25,9 +20,8 @@
 <p>I know myself well. There is a 0% chance I&#8217;m going to remember the syntax for this command. I&#8217;ll rarely use this, despite how powerful it could be. As a result, the best option is making it repeatable. Reading into the exploit technique, the article at exploit monday was the most helpful.</p>
 </div>
 
-<div style="flex-basis:33.33%">
+<div>
 <ul><li>CDB<ul><li><a href="https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/cdb-command-line-options">https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/cdb-command-line-options</a></li></ul></li><li>Example PoC<ul><li><a href="https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/cdb-command-line-options"></a><a href="http://www.exploit-monday.com/2016/08/windbg-cdb-shellcode-runner.html">http://www.exploit-monday.com/2016/08/windbg-cdb-shellcode-runner.html</a></li></ul></li></ul>
-</div>
 </div>
 
 <p>This tool accepts WDS file extensions, which are like debugger script files. The debugger commands can be scripted and executed with the right parameters. This makes it much easier. In the Exploit Monday PoC, we see shellcode that pops calc.</p>
@@ -38,8 +32,8 @@
 
 <p></p>
 
-<div style="grid-template-columns:auto 25%"><figure><img width="1024" height="915" src="/img/posts/2020-06-snake-312561_1280-1024x915.png" alt="" /></figure><div>
-<p class="has-large-font-size wp-block-paragraph">Time to write some python. </p>
+<div><figure><img width="1024" height="915" src="/img/posts/2020-06-snake-312561_1280-1024x915.png" alt="" /></figure><div>
+<p>Time to write some python. </p>
 
 <p>A little google searching didn&#8217;t immediately turn anything up, so I decided to write up my own python script to convert msfvenom payloads into the correct format for WDS files. I&#8217;m a high-functioning idiot, so the python script only does the bare minimums. To use it, I take the python output from the msfvenom payload and paste it into my script. Then redirect the output from the script into a &#8220;payload.wds&#8221; file.</p>
 
@@ -50,8 +44,8 @@
 
 <p><a href="https://github.com/galoryber/MITRE/blob/master/cdb-t1127.py">https://github.com/galoryber/MITRE/blob/master/cdb-t1127.py</a></p>
 
-<div style="grid-template-columns:auto 30%"><figure style="background-image:url(/img/posts/2020-06-Screenshot-2020-06-24-at-11.37.12-AM.png);background-position:50% 50%"><img width="562" height="321" src="/img/posts/2020-06-Screenshot-2020-06-24-at-11.37.12-AM.png" alt="" /></figure><div>
-<p class="has-large-font-size wp-block-paragraph">In short, here is what is going on: </p>
+<div><figure><img width="562" height="321" src="/img/posts/2020-06-Screenshot-2020-06-24-at-11.37.12-AM.png" alt="" /></figure><div>
+<p>In short, here is what is going on: </p>
 
 <p>We&#8217;re pasting the shellcode from msfvenom into the python script. I&#8217;m generating that with&#8230;</p>
 
@@ -66,7 +60,7 @@
 
 <p>The end result? All we really do is: Paste the msfvenom shellcode into the script, then run : </p>
 
-<pre><code>python3 poc.py >> payload.wds</code></pre>
+<pre><code>python3 poc.py>> payload.wds</code></pre>
 
 <p>That&#8217;s everything we need to execute. We have our PE cdb.exe and our payload.wds file. I choose to host these files on an attacking web server. The following powershell one liner will pull down and execute our payload.</p>
 
@@ -88,10 +82,10 @@ Set-Location $env:TEMP
 
 <p>Finally, -o this is the process that the debugger will open and attach to.</p>
 
-<div style="grid-template-columns:41% auto"><figure><img width="1024" height="653" src="/img/posts/2020-07-cards-161404_1280-1-1024x653.png" alt="" /></figure><div>
-<h2 class="has-secondary-color has-text-color wp-block-heading">I&#8217;ll take your RCE, and I&#8217;ll raise you a Reverse Shell</h2>
+<div><figure><img width="1024" height="653" src="/img/posts/2020-07-cards-161404_1280-1-1024x653.png" alt="" /></figure><div>
+<h2>I&#8217;ll take your RCE, and I&#8217;ll raise you a Reverse Shell</h2>
 </div></div>
 
 <p>We&#8217;ll use our powershell one-liner to pull the payload from an attacking web server, in this case, just a python SimpleHTTPServer. The attacking server also has a netcat listener running to receive the connection. The console on the left is an ssh session to the attacking server, and the console on the right is the victim powershell window. </p>
 
-<figure><video height="616" style="aspect-ratio: 1366 / 616;" width="1366" controls src="/media/2020-07-screencast-esx1-2020.07.06-20_37_27.webm"></video><figcaption>Video shows up-to-date Windows Defender, automatic sample submission turned off to avoid sending new payload experiments to MS. Inject shellcode into notepad process and observe the reverse shell connection. </figcaption></figure>
+<figure><video height="616" width="1366" controls src="/media/2020-07-screencast-esx1-2020.07.06-20_37_27.webm"></video><figcaption>Video shows up-to-date Windows Defender, automatic sample submission turned off to avoid sending new payload experiments to MS. Inject shellcode into notepad process and observe the reverse shell connection. </figcaption></figure>

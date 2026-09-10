@@ -1,4 +1,4 @@
-<p class="has-text-align-center wp-block-paragraph"><sub>The blog post accompanies my public conference talks on this topic. Slides are available at the bottom.</sub></p>
+<p><sub>The blog post accompanies my public conference talks on this topic. Slides are available at the bottom.</sub></p>
 
 <p></p>
 
@@ -10,35 +10,30 @@
 
 <h2>What do I mean Bypass EDR? </h2>
 
-<p>Well if I use some sort of basic shellcode runner, like this as a starting point. <a href="https://github.com/nettitude/PoshC2/blob/master/resources/payload-templates/csc.cs" target="_blank" rel="noopener" title="">https://github.com/nettitude/PoshC2/blob/master/resources/payload-templates/csc.cs </a></p>
+<p>Well if I use some sort of basic shellcode runner, like this as a starting point. <a href="https://github.com/nettitude/PoshC2/blob/master/resources/payload-templates/csc.cs" target="_blank" rel="noopener">https://github.com/nettitude/PoshC2/blob/master/resources/payload-templates/csc.cs </a></p>
 
 <p> </p>
 
 <div>
-<div style="flex-basis:33.33%">
-<div class="figure-row figure-row-3">
 <figure><img width="529" height="546" src="/img/posts/2023-05-SourceCode-1.png" alt="" /></figure>
 </div>
 
-<div style="flex-basis:66.66%">
+<div>
 <p>&#8230;and I compile that to an EXE, there are EDR tools that instantly look at those binaries ( and any similar custom shellcode runners) and determine they are suspicious. With embedded shellcode, it&#8217;s high entropy, it&#8217;s a globally unique EXE file, it immediately makes network connections outbound. EDR looks at this combination and just shuts down the process.<br><br>But if I take the same style of code and compile it as a DLL, EDR gives it much less scrutiny. Static analysis scans against the DLL are much more likely to consider the file safe and pass the scan. </p>
 
 <p>This means, we don&#8217;t have to rewrite our shellcode runners, we just need to compile them as a DLL. Then we just need a way to load our malicious DLLs.</p>
-</div>
 </div>
 
 <h2>What is DLL Sideloading?</h2>
 
 <div>
-<div style="flex-basis:66.66%">
 <p>I feel like this used to mean something more specific. These days it seems that it is a catch all that <strong>refers to an EXE that will load a DLL sitting alongside it</strong>.</p>
 
 <p>There are multiple ways that this can happen, like a manifest file specifying the dll location (historically, this is what I understood DLL sideloading to mean). You may also have source code with a LoadLibrary call that doesn&#8217;t use an absolute path, and therefore searches for DLLs based on search order. At the end of the day, we don&#8217;t care anymore (apparently).</p>
 </div>
 
-<div style="flex-basis:33.33%">
+<div>
 <figure><img src="/img/posts/2023-05-Ctempoleview.png" alt="" width="202" height="162" /></figure>
-</div>
 </div>
 
 <p><strong>What are we going to do?</strong></p>
@@ -60,13 +55,11 @@
 <p>Now that we have some EXEs, I run the EXE while watching with the SysInternals tool Procmon. Process Monitor will let you see what actions a process is taking. Using this, we can check for the process looking for a .DLL&nbsp;file where the result is NOT FOUND. Or sometimes I&#8217;ll run the exe and just monitor the directory that I&#8217;m running it from so I can see all the actions that it takes. In either case, I create a new empty directory, and place the EXE there with nothing else in that directory. For example, monitor C:\Temp\exes\ location only, and now any exe you run from that directory, you&#8217;ll get to see the actions it takes. </p>
 
 <div>
-<div>
 <figure><img src="/img/posts/2023-05-SDKExample-2.png" alt="" width="406" height="372"/></figure>
 </div>
 
 <div>
 <figure><img src="/img/posts/2023-05-ProcMonExample.png" alt="" width="465" height="257" /></figure>
-</div>
 </div>
 
 <h2><strong>Testing with OleView</strong></h2>
@@ -78,13 +71,11 @@
 <figure><img width="727" height="501" src="/img/posts/2023-05-ProcMonOle.png" alt="" /></figure>
 
 <div>
-<div>
 <p><br>Oleview gives us an error message though, a very verbose message that calls out the fact that it couldn&#8217;t find iviewers.dll. Even if you didn&#8217;t run Procmon, you&#8217;d already be able to guess that oleview probably sideloads iviewers.dll. Most EXEs aren&#8217;t going to be so obvious, so procmon is the way to go, and we can see iviewers.dll in the results from procmon as well.</p>
 </div>
 
 <div>
 <figure><img src="/img/posts/2023-05-OleVerboseIviewers.png" alt="" width="453" height="238" /></figure>
-</div>
 </div>
 
 <h2><strong>Inspecting the original DLL</strong></h2>
@@ -96,13 +87,11 @@
 <p>Using tools like CFF Explorer, PE-Bear, or objdump on the *nix command line, we can have the DLL parsed so we can explore it. The PE structure is parsed and displayed but that can be intimidating to look at if you&#8217;ve never seen it before. All we really care about this time is the &#8220;Exports&#8221; which will show us what functions exist inside of that DLL. These are the functions that an application can utilize when it loads the DLL.</p>
 
 <div>
-<div>
 <figure><img src="/img/posts/2023-05-OpenOrig.png" alt="" width="538" height="174" /></figure>
 </div>
 
 <div>
 <figure><img src="/img/posts/2023-05-CFFOrig.png" alt="" width="580" height="425"/></figure>
-</div>
 </div>
 
 <h2><strong>Writing our own DLL</strong></h2>
@@ -122,18 +111,15 @@
 <p>To review this, and prove ourselves correct, we can create a C# based DLL and create methods inside it. Even though our method names might be the same as, once we compile it and open the DLL with something like CFF explorer, we&#8217;ll see that there is no &#8220;Export Directory&#8221;. So a standard C# .NET Assembly doesn&#8217;t export functions the same way unmanaged code does. You&#8217;ll notice that there is a .NET Directory, so it recognizes that we&#8217;re looking at a different structure here. </p>
 
 <div>
-<div>
 <figure><img width="687" height="624" src="/img/posts/2023-05-CSharpNoExports.png" alt="" /></figure>
 </div>
 
 <div>
 <figure><img width="665" height="676" src="/img/posts/2023-05-NoExpCFF.png" alt="" /></figure>
 </div>
-</div>
 
 <p>But the C# DLL is compiled down to byte-code, so we can use an Intermediate Language disassembler to &#8216;reverse&#8217; the compiled code back to IL. This will show us a close resemblance of the source code. If we review the IL, we can find our methods. Inside the method, we have the ability to add a &#8216;.export&#8217; descriptor. This one change to our IL will publish the method as a exported function. With this change, we need to re-assemble the IL as a DLL again, and we can once again review the DLL in something like CFF explorer. </p>
 
-<div>
 <div>
 <figure><img width="708" height="575" src="/img/posts/2023-05-UnasmbldIL.png" alt="" /></figure>
 </div>
@@ -142,12 +128,10 @@
 <figure><img width="624" height="300" src="/img/posts/2023-05-ManualEditIL.png" alt="" /></figure>
 
 <figure><img width="570" height="35" src="/img/posts/2023-05-ReAsmbIL.png" alt="" /></figure>
-</div></div>
 </div>
 
 <p>This time, we&#8217;ll see that it&#8217;s still a .NET assembly of course, but now we have an Export Directory, with the function name properly exported. This is enough for an application to believe that the functionality is present, it won&#8217;t do any checks to see that the code does what it expects.</p>
 
-<div class="figure-row figure-row-3">
 <figure><img width="832" height="520" src="/img/posts/2023-05-ManuallyExported.png" alt="" /></figure>
 
 <h2>C# DLL- DLLExport Nuget Package</h2>
@@ -155,13 +139,11 @@
 <p>While we certainly could do this manually, we don&#8217;t have to. There is more than one way to make this easier for you, but I like the Nuget package DLLExport. If you install that package to your project, you can add the &#8216;[DLLExport]&#8217; decorator to your C# method and the methods will be properly exported to the EAT.</p>
 
 <div>
-<div>
 <figure><img width="660" height="368" src="/img/posts/2023-05-DLLExportPackage.png" alt="" /></figure>
 </div>
 
 <div>
 <figure><img width="574" height="608" src="/img/posts/2023-05-DLLExportSource.png" alt="" /></figure>
-</div>
 </div>
 
 <p>With the DLLExport Nuget package installed, we can compile the new DLL with the methods exported. The newly compiled DLL can be renamed to iviewers.dll and now we&#8217;ll be able to load it into oleview if we keep them in the same directory. The execution shows our msfvenom Message Box shellcode being loaded inside of oleview. </p>
@@ -173,13 +155,13 @@
 <figure><img width="414" height="50" src="/img/posts/2023-05-CPExpIviewers.png" alt="" /></figure>
 
 <figure><img width="379" height="385" src="/img/posts/2023-05-OlePoC.png" alt="" /></figure>
-</div><h2><strong>Why would this work</strong></h2>
+
+<h2><strong>Why would this work</strong></h2>
 
 <p>So we created an export&#8230; why does this work? We&#8217;re still loading oleview, which has no idea that bytecode is a thing. In fact, if we look at oleview running, we can see the clr.dll isn&#8217;t even loaded, so it doesn&#8217;t have any way to process managed code like our C# DLL. </p>
 
 <p>The thing is, when the OS loads the DLL, it recognizes that structure as byte-code, and already knows that in order to process it, we&#8217;ll need the CLR. As a result clr.dll will automatically be loaded into the process and our C# dll will execute as expected. </p>
 
-<div>
 <div>
 <figure><img width="490" height="329" src="/img/posts/2023-05-oleNoCLR.png" alt="" /></figure>
 </div>
@@ -187,18 +169,15 @@
 <div>
 <figure><img width="497" height="329" src="/img/posts/2023-05-OleCLR.png" alt="" /></figure>
 </div>
-</div>
 
 <h2><strong>Cool, but I don&#8217;t write code</strong></h2>
 
 <div>
-<div style="flex-basis:66.66%">
 <p>Yeah, you don&#8217;t really have to. There are great tools out there, and when it comes to DLL sideloading, I&#8217;ve really liked the Freeze project by Optiv. The project lets you specify an export, and some shellcode, and it will create a DLL with that export, which encrypting your shellcode inside the DLL. <br>I also really like the pull request on the project right now, which allows you to specify multiple exports, or specify a source DLL. In that case, you can specify the original DLL, and your shellcode from your favorite C2 server. The result is a DLL that you can use for DLL sideloading.</p>
 </div>
 
-<div style="flex-basis:33.33%">
+<div>
 <figure><img src="/img/posts/2023-05-Optiv.jpg" alt="" width="153" height="211" /></figure>
-</div>
 </div>
 
 <p> </p>
@@ -239,4 +218,4 @@
 
 <h2>Presentation Slides</h2>
 
-<div><a id="wp-block-file--media-b4f2bbb6-64aa-496f-87e4-499abd814b53" href="/media/2023-05-DLL-Sideloading.pptx">DLL-Sideloading</a><a href="/media/2023-05-DLL-Sideloading.pptx" download aria-describedby="wp-block-file--media-b4f2bbb6-64aa-496f-87e4-499abd814b53">Download</a></div>
+<div><a id="wp-block-file--media-b4f2bbb6-64aa-496f-87e4-499abd814b53" href="/media/2023-05-DLL-Sideloading.pptx">DLL-Sideloading</a><a href="/media/2023-05-DLL-Sideloading.pptx" download>Download</a></div>
