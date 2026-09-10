@@ -2,7 +2,7 @@
   {
     "slug": "globetech-dotbiz",
     "title": "Vulnerability Assessments and Penetration Testing",
-    "legacy_path": "/index.php/globetech-dotbiz/",
+    "legacy_path": "/",
     "route": "/",
     "nav_label": "Home",
     "in_nav": false,
@@ -29,7 +29,7 @@
   {
     "slug": "penetration-testing-services",
     "title": "Network Penetration Testing Services",
-    "legacy_path": "/index.php/penetration-testing-services/",
+    "legacy_path": "/index.php/professional-services/penetration-testing-services/",
     "route": "/services/network-penetration-testing/",
     "nav_label": "Network Penetration Testing",
     "in_nav": false,
@@ -38,7 +38,7 @@
   {
     "slug": "external-vulnerability-scanning",
     "title": "External Vulnerability Scanning",
-    "legacy_path": "/index.php/external-vulnerability-scanning/",
+    "legacy_path": "/index.php/professional-services/external-vulnerability-scanning/",
     "route": "/services/external-vulnerability-scanning/",
     "nav_label": "External Vulnerability Scanning",
     "in_nav": false,
@@ -47,7 +47,7 @@
   {
     "slug": "internal-vulnerability-scanning",
     "title": "Internal Vulnerability Scanning",
-    "legacy_path": "/index.php/internal-vulnerability-scanning/",
+    "legacy_path": "/index.php/professional-services/internal-vulnerability-scanning/",
     "route": "/services/internal-vulnerability-scanning/",
     "nav_label": "Internal Vulnerability Scanning",
     "in_nav": false,
@@ -56,7 +56,7 @@
   {
     "slug": "web-application-penetration-testing",
     "title": "Web Application Penetration Testing",
-    "legacy_path": "/index.php/web-application-penetration-testing/",
+    "legacy_path": "/index.php/professional-services/web-application-penetration-testing/",
     "route": "/services/web-application-penetration-testing/",
     "nav_label": "Web Application Penetration Testing",
     "in_nav": false,
@@ -65,7 +65,7 @@
   {
     "slug": "wifi-testing-services",
     "title": "WiFi Testing Services",
-    "legacy_path": "/index.php/wifi-testing-services/",
+    "legacy_path": "/index.php/professional-services/wifi-testing-services/",
     "route": "/services/wifi-testing/",
     "nav_label": "WiFi Testing",
     "in_nav": false,
