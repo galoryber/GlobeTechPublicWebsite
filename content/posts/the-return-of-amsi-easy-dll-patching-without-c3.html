@@ -42,8 +42,6 @@
 
 <p>If you&#8217;re looking to build custom detections for this, start with this Elastic post, they&#8217;ve done great work by already providing this detection and allowing you to benefit from it. <a href="https://www.elastic.co/guide/en/security/current/suspicious-antimalware-scan-interface-dll.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/security/current/suspicious-antimalware-scan-interface-dll.html </a></p>
 
-<p></p>
-
 <h2>Understanding the detection</h2>
 
 <p>With my beacon process loading <strong>my own version</strong> of amsi.dll, I was still able to produce amsi patch detections by overwriting the bytes at amsi!AmsiScanBuffer with a known byte-patch&#8230;</p>
@@ -236,4 +234,3 @@ RET;</code></pre>
 
 <figure></figure>
 
-<p></p>

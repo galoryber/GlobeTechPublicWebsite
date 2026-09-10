@@ -1,18 +1,12 @@
 <p><sub>The blog post accompanies my public conference talks on this topic. Slides are available at the bottom.</sub></p>
 
-<p></p>
-
 <p>One thing I learned from doing this talk is that a surprisingly high number of InfoSec professionals believe that bypassing EDR is not possible or is an exception. It should be more common knowledge that security tools can be bypassed. Regardless of what EDR you run, there are ways to get around it. This is one technique to evade those defenses by running malware within a more trustworthy process. </p>
 
 <p>Instead of believing that your security tools will prevent all malware, you should know that eventually it can be bypassed, so it&#8217;s better to understand some of those techniques, and how the malware operates.</p>
 
-<p></p>
-
 <h2>What do I mean Bypass EDR? </h2>
 
 <p>Well if I use some sort of basic shellcode runner, like this as a starting point. <a href="https://github.com/nettitude/PoshC2/blob/master/resources/payload-templates/csc.cs" target="_blank" rel="noopener">https://github.com/nettitude/PoshC2/blob/master/resources/payload-templates/csc.cs </a></p>
-
-<p> </p>
 
 <div>
 <figure><img width="529" height="546" src="/img/posts/2023-05-SourceCode-1.png" alt="" /></figure>
@@ -40,13 +34,9 @@
 
 <p>We&#8217;re going to find a Microsoft signed EXE that will ‘sideload’ DLLs. Then we&#8217;ll place our DLL in the same directory to get execution through the DigSig binary.</p>
 
-<p></p>
-
 <p>Check out these references about DLL Sideloading. <strong>Hijack Libs</strong> is basically what inspired me to start writing my malware this way, and let to this talk / post. </p>
 
 <p><a href="https://www.mandiant.com/resources/blog/abusing-dll-misconfigurations">Mandiant</a>, <a href="https://hijacklibs.net/">hijacklibs.net</a>, <a href="https://www.cybereason.com/blog/threat-analysis-report-dll-side-loading-widely-abused">CyberReason</a></p>
-
-<p></p>
 
 <h2>Finding a vulnerable EXE</h2>
 
@@ -180,8 +170,6 @@
 <figure><img src="/img/posts/2023-05-Optiv.jpg" alt="" width="153" height="211" /></figure>
 </div>
 
-<p> </p>
-
 <h2><strong>Didn&#8217;t this just break Oleview?</strong></h2>
 
 <p>Absolutely, but in our case, we may just want a C2 beacon executed. We&#8217;re only doing it with oleview to gain extra trust from our security tools by executing within a legitimate tool. </p>
@@ -202,19 +190,11 @@
 
 <p>To test your EDR, you could copy something like relpost.exe from System32, and build your own reagent.dll (examples from hijacklib) and see your EDRs reaction to understand what it is capable of.</p>
 
-<p></p>
-
 <p>You might also consider looking at signed binaries that are loading DLLs that aren&#8217;t signed. For example, the original iviewers.dll is also a Microsoft signed file. Our version of iviewers is obviously not signed by Microsoft.</p>
-
-<p></p>
 
 <p>When it comes to C# tradecraft, you might want to watch for clr.dll being loaded into a process, especially if you can understand where that is normal and when it isn&#8217;t. This is useful beyond just our PoC, but for any beacon that loads C# based malware. For example, a beacon process that loads something like seatbelt or rubues, would have the side effect of image loading clr.dll .</p>
 
-<p></p>
-
 <p>If you can, baseline what normal looks like for your exes running in &#8216;non-standard&#8217; directories. Potentially more difficult, but attempt to do the same for your DLLs based on image load events. I&#8217;ve also heard there may be opportunity in identifying newly written DLLs that are immediately loaded into another process. Pairing down all of this information has resulted in decent success in teams I&#8217;ve seen.</p>
-
-<p></p>
 
 <h2>Presentation Slides</h2>
 

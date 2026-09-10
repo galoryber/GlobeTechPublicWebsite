@@ -296,3 +296,18 @@ a.card:hover { border-color: var(--rule-firm); transform: translateY(-2px); }
 .card .tier { font-family: var(--mono); font-size: .68rem; letter-spacing: .12em;
   text-transform: uppercase; color: var(--signal); margin: 0 0 8px; }
 .card h2 { margin: 0 0 8px; font-size: 1.08rem; color: var(--navy); letter-spacing: -.01em; }
+
+/* ---------- social link ---------- */
+
+/* The LinkedIn mark arrived wrapped in a single-item <ul>, which put a bullet
+   beside it, and its <svg> carried no fill — so the path painted black and
+   vanished against the dark palette. It now inherits currentColor. */
+.prose .social-link {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-top: .4em; padding: 9px 16px 9px 13px;
+  border: 1px solid var(--rule-firm); border-radius: var(--radius);
+  color: var(--ink); text-decoration: none; font-weight: 600; font-size: .95rem;
+  transition: border-color .16s, color .16s, background .16s;
+}
+.prose .social-link:hover { border-color: var(--signal); color: var(--signal); background: var(--signal-bg); }
+.prose .social-link svg { width: 22px; height: 22px; flex: none; }
