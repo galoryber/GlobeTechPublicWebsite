@@ -1,0 +1,95 @@
+<h4 class="has-text-align-center has-text-color wp-block-heading" style="color:#a90c0c">Blog Preface &#8211; &#8220;Windows Kits&#8221;</h4>
+
+<p class="has-text-align-center wp-block-paragraph">While running through some MITRE techniques, I happened upon the ADK tools and SDK tools and found a great collection of programs used for development, debugging, and administration. It just so happens, they&#8217;re also great for Red Teaming. Many of them are Digitally Signed by Microsoft, making them a great bypass for Applocker / Application Whitelisting. </p>
+
+<div style="grid-template-columns:auto 37%"><figure><img width="796" height="164" src="/img/posts/2020-06-ATTCK_red.png" alt="" /></figure><div>
+<p class="has-large-font-size wp-block-paragraph">In this post, we&#8217;ll talk about one of the core principles of Red Teaming.</p>
+</div></div>
+
+<h4 class="has-text-align-center wp-block-heading">T1003 &#8211; Credential Dumping </h4>
+
+<h6 class="has-text-align-center wp-block-heading"><a href="https://attack.mitre.org/techniques/T1003/">https://attack.mitre.org/techniques/T1003/</a></h6>
+
+<div style="height:20px" aria-hidden="true"></div>
+
+<div>
+<div style="flex-basis:66.66%">
+<p>For the sake of quality and reference, ADK is Windows Assessment and Deployment Kit. The &#8220;kit&#8221; is nothing more than an intermediate installer for a selection of other tool-kits.</p>
+
+<p>For our discussion, we&#8217;ll be using the Debugger Kits. These are found in the SDK, or WDK. Software Development Kits and Windows Debugger Kits respectively. </p>
+
+<p>When you install the SDK, the wizard will prompt you to select the kits that you want to use. All you need to install in order to follow along is that Debugger Kit. This will give you a collection of dev and debugger tools provided from MS.</p>
+</div>
+
+<div style="flex-basis:33.33%">
+<ul><li>ADK<ul><li><a href="https://docs.microsoft.com/en-us/windows-hardware/get-started/adk-install">https://docs.microsoft.com/en-us/windows-hardware/get-started/adk-install</a></li></ul></li><li>SDK<ul><li><a href="https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/debugger-download-tools">https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/debugger-download-tools</a></li></ul></li></ul>
+</div>
+</div>
+
+<div><div>
+<figure><ul class="blocks-gallery-grid"><li class="blocks-gallery-item"><figure><a href="/img/posts/2020-06-Screenshot-2020-06-15-at-9.50.18-PM.png"><img width="300" height="109" src="/img/posts/2020-06-Screenshot-2020-06-15-at-9.50.18-PM-300x109.png" alt="" /></a></figure></li><li class="blocks-gallery-item"><figure><a href="/img/posts/2020-06-Screenshot-2020-06-15-at-9.50.43-PM.png"><img width="300" height="203" src="/img/posts/2020-06-Screenshot-2020-06-15-at-9.50.43-PM-300x203.png" alt="" /></a></figure></li><li class="blocks-gallery-item"><figure><a href="/img/posts/2020-06-Screenshot-2020-06-15-at-9.51.34-PM.png"><img width="300" height="229" src="/img/posts/2020-06-Screenshot-2020-06-15-at-9.51.34-PM-300x229.png" alt="" /></a></figure></li></ul><figcaption class="blocks-gallery-caption">When installing, probably beneficial to all red teamers if you could avoid sending usage data to Microsoft, k?</figcaption></figure>
+</div></div>
+
+<p>Selecting only the debugger kit installs quite a selection of tools. I intend on doing a series of blog posts about each of the interesting tools that I&#8217;ve worked with, but for today we&#8217;re going to focus on &#8220;adplus&#8221;. </p>
+
+<p>Once installed, these kits can be found in C:\Program Files (x86)\Windows Kits\</p>
+
+<p>We&#8217;ll be working in ..\Windows Kits\10\Debuggers\x64 where you&#8217;ll file a large number of tools, including adplus.exe (and the adplus vbs and others)</p>
+
+<div style="grid-template-columns:26% auto"><figure><img width="640" height="640" src="/img/posts/2020-06-microsoft-80660_640.png" alt="" /></figure><div>
+<p class="has-large-font-size wp-block-paragraph">If you right click &#8220;adplus.exe&#8221; and go to Properties, you&#8217;ll see that we have a Digital Signature by Microsoft.</p>
+
+<p>I feel like I see a lot of blogs referencing tools that are signed by Microsoft. Often, people see Microsoft related things when they look at the &#8220;Details&#8221; tab of the Properties section and they called it a Digitally Signed binary, but in reality, it&#8217;s just metadata and not a signature. If it&#8217;s signed, we&#8217;ll have a Digital Signature tab where we can see the certificate. </p>
+
+<p>For example, in C:\Windows\System32\cmstp.exe or notepad.exe you can right click to go to Properties and see the Details tab showing &#8220;Microsoft&#8221;. You&#8217;ll also see that there is no Digital Signature tab. It took me much longer than I&#8217;d like to admit to learn that some binaries are in a catalogue of known hashes, which also qualifies them as signed binaries. So just because you don&#8217;t see a Digital Signature tab, doesn&#8217;t automatically mean it&#8217;s not digitally signed. </p>
+</div></div>
+
+<p>Although we&#8217;ll be going over several of these tools in this blog series, I&#8217;ll mention an interesting thing about the tools I&#8217;ve used so far. They&#8217;re all Portable Executables. This means that we don&#8217;t need to install these Kits on the victim. If you can download the file, you can execute it. </p>
+
+<div>
+<div>
+<h4 class="has-text-align-center wp-block-heading">But What does it do?!</h4>
+</div>
+
+<div>
+<h4 class="has-text-align-center wp-block-heading">Why am i here?!</h4>
+
+<p class="has-text-align-center has-secondary-color has-text-color has-small-font-size wp-block-paragraph">i have no idea</p>
+</div>
+</div>
+
+<p>I can only tell you what it does. I wasn&#8217;t looking into this tool specifically, I just happened across it and ran the exe to find out what it does. /? WTF is this thing. I&#8217;ve used adplus, but only in Chrome&#8230; joke&#8230; it&#8217;s obviously different. </p>
+
+<div>
+<div>
+<figure><img width="558" height="468" src="/img/posts/2020-06-Screenshot-2020-06-17-at-10.18.06-PM.png" alt="" /><figcaption>Friggin 2011?! This thing is old&#8230;</figcaption></figure>
+</div>
+
+<div>
+<figure><img width="509" height="137" src="/img/posts/2020-06-Screenshot-2020-06-17-at-10.17.15-PM.png" alt="" /></figure>
+
+<p>Pair these pictures with a little bit of google searching on the tool&#8230; </p>
+
+<p>Does any of this sound familiar to you? I quickly began to realize that this sounds just like a procdump style tool. While I was still not entirely positive what the flags meant, I continued through the help menu and determined that I probably wanted the &#8220;hang mode&#8221; of the command. I also liked the option to specify by a process ID, instead of a name, more on that later. </p>
+</div>
+</div>
+
+<p>I tested with notepad.exe first, and sure enough received the DMP file from the process. With that in the bag, I went straight to lsass.exe</p>
+
+<pre><code>.\adplus.exe -hang -pn lsass.exe -o C:\temp</code></pre>
+
+<h3 class="has-secondary-color has-text-color wp-block-heading"> Here&#8217;s the real reason I cared about this</h3>
+
+<p>I do most of my testing against a fully patched windows 10 machine with Windows Defender in it&#8217;s default state. Despite the grief it gets, it does a decent job against a wide variety of things. This includes protecting Lsass, actually. By default, a memory dump of the lsass process is triggered by Defender as an LSASSAttack and the corresponding DMP file is completely deleted before you can do anything with it. </p>
+
+<p>In addition to that, blue teams like to watch for procdump. While there are other ways / tools to dump the process, procdump is a golden standard and go-to Red Team tool for it. There are plenty of other methods, but I haven&#8217;t seen adplus.exe listed anywhere yet. If I haven&#8217;t seen it around yet, it&#8217;s unlikely that you&#8217;ll have many blue teams detecting the command line string for this executable. Further, the command line string doesn&#8217;t have to indicate a memory dump of the lsass process. If we use the process ID, we avoid putting the word lsass into that string, requiring a little more IR work to determine what the action was. </p>
+
+<p>Instead of &#8220;procdump&#8221; (a known tool) doing a memory dump on lsass (the obvious credentials dump process) and specifying the lsass.dmp file&#8230; we&#8217;re now running adplus (a less known tool) against a process id (not an immediate red flag as opposed to lsass.exe) and then that&#8217;s it, no indication that we&#8217;re about to write a DMP file. </p>
+
+<figure><video height="616" style="aspect-ratio: 1366 / 616;" width="1366" controls src="/media/2020-06-screencast-esx1-2020.06.17-22_35_03.webm"></video><figcaption>Video shows up-to-date Windows Defender, automatic sample submission turned off to avoid sending new payload experiments to MS. First I dump lsass with adplus with no issues, then I dump again with ProcDump, triggering Defender. </figcaption></figure>
+
+<p>There is a caveat to this tool. Adplus more or less automates the dumping process for you, through the usage of cdb.exe. CDB.exe is also a Digitally Signed Microsoft tool within the Debugger Kit directory. This means the two tools need to be in the same directory together when you run them. In my test, I copied adplus.exe and cdb.exe to the C:\temp directory of the victim. </p>
+
+<p>This actually clears up why you don&#8217;t see it as an lsass tool, since the tool we&#8217;re actually leveraging is cdb.exe, which is it&#8217;s own MITRE technique T1127. </p>
+
+<p>I&#8217;ll also be going over cdb.exe usage in my next blog post, leveraging that DigSig binary to inject your own shellcode into memory to produce reverse shells. </p>

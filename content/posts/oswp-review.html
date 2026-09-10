@@ -1,0 +1,111 @@
+<div><figure class="aligncenter size-large"><img width="1000" height="128" src="/img/posts/2020-04-offsec-student-certified-emblem-rgb-oswp.png" alt="" /></figure></div>
+
+<p class="has-text-color has-text-align-center has-large-font-size has-secondary-color wp-block-paragraph"><strong>This is my review of the OSWP course material. I passed this certification in late 2019. </strong></p>
+
+<p class="has-text-align-center wp-block-paragraph">The Offensive Security Wireless Professional is a certification course and exam that tests your knowledge around wireless penetration testing. Offensive Security is easily my favorite certification vendor simply because of their exam approach. The entirely practical exam means that you don&#8217;t pass unless you can actually attack and gain access to their wireless networks.  In this case, you receive SSH access to an attacker machine with nearby wireless networks. You pass by successfully compromising the wireless networks. </p>
+
+<div>
+<div>
+<h3 class="has-text-color has-text-align-center wp-block-heading" style="color:#2ff425">What I&#8217;ll be covering</h3>
+
+<figure><img width="1024" height="768" src="/img/posts/2020-04-praveen-kumar-mathivanan-yqLrqIsl294-unsplash-1024x768.jpg" alt="" /></figure>
+</div>
+
+<div>
+<ul><li>General Structure <ul><li>Inner workings of Wifi</li><li>Example PCAPs</li></ul></li><li>WEP<ul><li>More WEP</li><li>OMG WEP</li></ul></li><li>WPA / WPA2<ul><li>Attacking WPA/2</li><li>Mass attacking tools<ul><li>Wardriving tools</li><li>Precompling tools &#8211; CPU and GPU</li></ul></li><li>Other exercises</li></ul></li><li>Enterprise Authentication<ul><li>And the lack thereof</li><li>Why you should be okay with this</li></ul></li><li>Overall</li></ul>
+
+<p></p>
+</div>
+</div>
+
+<h2 class="has-text-color has-text-align-center wp-block-heading" style="color:#2ff425">General Structure</h2>
+
+<p>For the uninitiated, Offensive Security will provide course materials to you once you register for the course. This includes a PDF of their course work that should be considered a text book, as well as a lab guide. In addition, you&#8217;ll be provided with videos to correspond with the materials. Finally, for this course they&#8217;ll provide you with an ISO of the attacking VM that they suggest using. </p>
+
+<p>It&#8217;s worth noting, that the VM they provide is quite outdated. It works perfectly well, and won&#8217;t hinder you at all for the course or beyond, meaning you&#8217;ll still be able to apply all of your knowledge to a shiny new VM as well. Still, the general stigma around OffSec is that they need some updating, so this doesn&#8217;t help. </p>
+
+<p>The course materials really start with a foundation of &#8220;how Wifi works&#8221; which I thought was fantastic. After years of SysAdmin work, and a dozen other industry certifications, this was the first textbook that actually talked about the structure of a wireless packet. For the first time in my career, I felt like I actually knew what was happening over the air. It shouldn&#8217;t be up to the OSWP to provide this knowledge, but this fundamental understanding of the traffic is absolutely crucial to feeling comfortable and confident that you know what your attacks are doing. </p>
+
+<p>The structure of APs and Clients and the communications they perform are clearly laid out, each with a matching PCAP file that&#8217;s been filtered down to show only the needed information. Specific packet details are called out in each PCAP gradually. At the end you can tell what you&#8217;re looking at, even if you&#8217;re unfamiliar with the flag being set in a particular section of the packet.</p>
+
+<h2 class="has-text-color wp-block-heading" style="color:#2ff425">WEP &#8211; So Much WEP</h2>
+
+<div><figure><img width="1024" height="683" src="/img/posts/2020-04-miguel-oros-LmsppeMVX2Y-unsplash-1024x683.jpg" alt="" /></figure><div>
+<p class="has-large-font-size wp-block-paragraph">Then the materials get into actual attacks, starting with WEP networks. And why not? WEP is easily bypassed and riddled with various ways to accomplish our goal. </p>
+
+<p>And after a little about WEP, they move on into WEP with clients vs without clients.</p>
+
+<p>And then WEP with various techniques. </p>
+
+<p>And you begin wondering if they will ever teach you anything else. </p>
+</div></div>
+
+<div><figure><img width="225" height="225" src="/img/posts/2020-04-download.jpeg" alt="" /></figure><div>
+<p class="has-large-font-size wp-block-paragraph">The WEP section of the materials easily makes up for 60% of the coursework. </p>
+
+<p class="has-large-font-size wp-block-paragraph">This can be really disappointing. </p>
+
+<p>As somebody that always tries to see both sides of view, I really try to justify this. After all, you&#8217;ve just received the crucial and vitally important fundamental knowledge about how WiFi is supposed to work, it should be just as valuable to understand how it fails. It should be.</p>
+</div></div>
+
+<p>The reality is, it just sucks. Any modern wifi attack toolkit will fully automate WEP attacks. While it&#8217;s great to understand it, I&#8217;m never going to execute it manually. Ever. It&#8217;s presence in 2020 is far and few between. The WEP portion of this material needs to be trimmed. </p>
+
+<p>That said, you WILL know how to attack it. You&#8217;ll set up a few different scenarios in your lab and go through each. You&#8217;ll know it inside and out. There is something to be said for that. </p>
+
+<p>You&#8217;ll also just type wifite -i wlan0 and never think about it again. </p>
+
+<h2 class="has-text-color wp-block-heading" style="color:#2ff425">WPA and WPA2</h2>
+
+<p>After all that nonsense, you&#8217;ll be excited to step into the WPA/2 sections. The WEP sections satisfy a deeply technical knowledge that you don&#8217;t get the same way in WPA based networks. Although you&#8217;ll get an understanding of the design of these systems, you&#8217;ll quickly learn that your attack surface is quite different. </p>
+
+<p>You&#8217;ll cover the same concepts, review some PCAPs of the traffic and setup some labs to attack. The biggest difference is that you&#8217;ll find these attacks to a lot more passive. In fact, they&#8217;re so passive that it almost leaves you wanting more WEP like material, but for WPA/2 of course. </p>
+
+<div><figure><img width="529" height="640" src="/img/posts/2020-04-heartbleed-378010_640.png" alt="" /></figure><div>
+<p class="has-large-font-size wp-block-paragraph">In my opinion, the modern wireless encryption standards have seen more &#8220;one-off&#8221; exploits and the course materials could benefit from sharing some of those. </p>
+
+<p>The same way you would be remiss from excluding ShellShock or Drupalgeddon from a PenTest crash course, it seems that a few exploits are worth highlighting. I&#8217;m thinking along the lines of routers where WPS PINS were quickly and easily bypassed, or the more recent Krook based attacks. Attacks like these come and go as the firmware is updated, but I think it would be a nice addition to the material.</p>
+</div></div>
+
+<p>In addition to the WPA/2 based attack options, the OSWP dives into some toolkits that might be useful throughout your wireless auditing. I think they do a really good job covering a lot of bases that I wouldn&#8217;t have asked for, but I&#8217;m glad I know about. </p>
+
+<p>This included tools like cowPatty or Pyrit to precompute SSID and password possibilities using your GPU. It included Kismet and plugins to introduce the concepts of wardriving and taking actual useful data out of it.  It included passively decrypting traffic for an IDS feed. The entire aircrack suite is covered. </p>
+
+<p>Although technically, none of that is specific to WPA/2, I had placed that entire section within the WPA knowledge in my head, primarily because it was all relevant and useful knowledge. </p>
+
+<p>Those additions to the course exceeded my expectations. While I expected to be able to attack wireless, I had not really anticipated the variety of toolkits that would aid me in a SOC style of value. </p>
+
+<h2 class="has-text-color wp-block-heading" style="color:#2ff425">WPA Enterprise</h2>
+
+<p>When I came towards the end of the material, I was suprised to see that there was NO material focused on attacking WPA Enterprise networks. This was disappointing&#8230;</p>
+
+<p><strong>&#8230; Until I put an ounce of thought into it&#8230; </strong></p>
+
+<p>If you&#8217;re taking the course, you understand attacking the PSK (PreShared Key). With Enterprise, the password (and username) you&#8217;re looking for aren&#8217;t actually negotiated by the AP. This is in your materials as well, where it highlights the communication between the AP and the authentication server. If you want these credentials, you need to get them from the back end system, which is almost always going to be Active Directory.</p>
+
+<blockquote><p><strong>If you want to connect to WPA-PSK, attack the PSK. If you want to connect to WPA-Enterprise, attack the enterprise.</strong></p></blockquote>
+
+<p>Under that context, it&#8217;s a little easier to see why there isn&#8217;t anything in the materials on attacking it. Do you expect that you&#8217;ll be able to reverse the ciphertext of the certificate based authentication? or would it be easier to get Initial Access to the company by a different means? </p>
+
+<p>If they&#8217;re using AD Username and Password for the Enterprise Authentication, then it would be far easier to social engineer a username and password out of a person who likes to click emails vs. actually attempting to attack the Enterprise authentication process exclusively from the wireless.</p>
+
+<p>In my own personal opinion, it can be perceived that&nbsp;Enterprise&nbsp;might be LESS secure than PSK, simply because your wireless is only as secure as the least-secure minded employee. Username and &#8220;Summer20&#8221; is a pretty terrible wireless protection. Good&nbsp;enterprise&nbsp;security would include good logging and employee awareness. Certificate based auth would be better, but I think a lot of IT departments are scared off by that. As a result, the easier thing to implement is a good PSK, which the average IT person or IT department can properly secure quickly and easily.</p>
+
+<h2 class="has-text-color wp-block-heading" style="color:#2ff425">Overall</h2>
+
+<h6 class="has-secondary-color has-text-color wp-block-heading">Is it worth it?</h6>
+
+<p>Yes &#8211; I think it&#8217;s a small price to pay for wireless attack knowledge and you&#8217;ll definitely walk away with your value</p>
+
+<h6 class="has-secondary-color has-text-color wp-block-heading">Would I recommend it?</h6>
+
+<p>Yes &#8211; Anybody considering it probably already knows enough about what they&#8217;re getting into that they&#8217;ll be happy they did it. </p>
+
+<h6 class="has-secondary-color has-text-color wp-block-heading">Do I think you&#8217;ll be disappointed?</h6>
+
+<p>Yes &#8211; The common complaint with OffSec is the outdated material, and this is no exception. Despite this, the quality of their material is still high enough for it to be overlooked, and still considered valuable. </p>
+
+<p>Overall, I can confidently attack wireless and know I&#8217;ll get it if there is a chance to get in. I would add that any home or SOHO router is basically easily bypassed after a small amount of review because of predictable passwords and OSINT. Businesses make the same mistakes- find that predictable password and you can generally get in. </p>
+
+<h4 class="has-text-color has-text-align-center wp-block-heading" style="color:#2ff425">Changes </h4>
+
+<p class="has-text-align-center wp-block-paragraph">Offsec gets asked frequently if they&#8217;re going to update the material. OSCP has seen significant adds to the material this year, and that&#8217;s more of their flagship cert than this one, but it&#8217;s a good sign for them. I would personally like to see a little less on WEP. The history is important, and the foundational knowledge is necessary to execute the other attacks with confidence, but all modern wifi attack tools have fully automated WEP cracking and eliminate the need for any WEP knowledge. By shaving down that material, additional techniques around WPA/ WPA2 could be discussed, like specific exploits (Krook, Reaver based attacks) . In addition, a small amount of discussion around Enterprise might be good add.</p>

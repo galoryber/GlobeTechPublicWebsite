@@ -1,0 +1,249 @@
+<div><figure class="aligncenter size-large"><img width="1000" height="128" src="/img/posts/2020-04-offsec-student-certified-emblem-rgb-oscp.png" alt="" /></figure></div>
+
+<p class="has-text-color has-text-align-center has-secondary-color wp-block-paragraph"><strong>This is a review of my OSCP experience. I registered in late 2018 and received my OSCP in May of 2019 with one exam attempt. This review is coming out in 2020. </strong></p>
+
+<p>The Offensive Security Certified Professional is a golden standard in the CyberSecurity and Penetration Testing community. Its known for it&#8217;s grueling 24 hour exam which is entirely practical and hands on, meaning there is not a single question on the exam, you can either attack the systems or you can&#8217;t. It easily ranks as my most proud career achievement, outdoing all other certifications by a long shot. </p>
+
+<h2 class="has-accent-color has-text-color wp-block-heading">What I&#8217;ll Cover</h2>
+
+<div>
+<div style="flex-basis:33.33%">
+<figure><img width="640" height="479" src="/img/posts/2020-04-hacking-1685092_640.jpg" alt="" /></figure>
+
+<p></p>
+</div>
+
+<div style="flex-basis:66.66%">
+<ul><li>My Background Experience<ul><li>How I started with Penetration Testing</li></ul></li><li>Registering and Beginning<ul><li>The Course Materials / Video</li><li>My study plan and time involved</li><li>Writing the Lab Exercises report</li></ul></li><li>My Lab Time<ul><li>Documenting the lab machines report</li><li>Working through the systems in your time</li></ul></li><li>Exam <ul><li>How to prepare for the exam</li><li>Reporting</li></ul></li><li>Overall</li></ul>
+</div>
+</div>
+
+<h2 class="has-accent-color has-text-color wp-block-heading">My Background</h2>
+
+<h6 class="has-secondary-color has-text-color wp-block-heading">tldr is below</h6>
+
+<p>If you&#8217;re like me, this section is always the worst part of an OSCP review. Really&#8230; you don&#8217;t care about my background, you don&#8217;t want to know what I might do with my career or how I got here, but you still have to read it, because you kinda wanna know if I&#8217;m similar to you. Ugh&#8230; here goes.</p>
+
+<p>I had always had a small interest in IT Security but recognized early on that you needed to know a lot about a lot. The more you&#8217;ve worked with, the better off you are once you start attacking things. Attacking a database? Sure would help if you knew SQL, and even better if you&#8217;ve been a DBA in the past. Trying to move laterally through the network? Would be helpful if you knew networking protocols and remote connection options for Windows systems right? </p>
+
+<p>I started as a help desk, XP certified, desktop support. I moved into a SysAdmin role quickly after that, getting additional network and server certificates along the way. A+, Net+, Sec+, MCSA, among other studies. I did practically no &#8220;programming&#8221; languages for almost 7 &#8211; 8 years of my career. The one thing I did that benefited me greatly is that I would solve every problem twice. Once, by helping the end user solve the problem, and then a second time when I got back to my desk by finding out how I could have solved that problem without actually going to the end-users PC. This made me extremely familiar with command line and remote support. Which led to powershell, which led to Object Oriented languages and scripting. </p>
+
+<p>I received my OSCP in early 2019, but started taking security more seriously around 2016. As I said, I was always interested but I knew that I was an idiot. I didn&#8217;t have what it took to get into security. In 2016 I registered for a Udemy course. </p>
+
+<blockquote><p>The Complete Ethical Hacking Course: Beginner to Advanced</p><cite>Ermin Kreponic &#8211; https://www.udemy.com/share/101Wm2A0EbeVlaQ3g=/</cite></blockquote>
+
+<p>It&#8217;s Udemy, so it was priced fair which made it super easy for me to access. I figured this was a good way to see if I was actually interested in it, or if it was just a fun thought. Even then, a lot of it was over my head, but all familiar enough that I knew I enjoyed it. None-the-less, it was a background interest for years after that as well. Until 2018. </p>
+
+<p>2018 I decided it was time. I wanted to make the IT security dream a reality. This is how I went from SysAdmin with limited scripting knowledge to a Full-Time Penetration Tester. </p>
+
+<blockquote><p>&#8220;I researched and found the OSCP. Oh the stigma! Such a presence around the OSCP, that was the one&#8230; but how? &#8220;</p><cite>&#8211; Me &#8230; My Thoughts</cite></blockquote>
+
+<div>
+<div style="flex-basis:33.33%">
+<figure><img width="640" height="600" src="/img/posts/2020-04-green-154264_640.png" alt="" /><figcaption>Not HackTheBox &#8211; because I was too lazy to see if I could legally use their logo</figcaption></figure>
+</div>
+
+<div style="flex-basis:66.66%">
+<p class="has-normal-font-size wp-block-paragraph">Like most, I started with HackTheBox. Again, it was a cheap (free) option that let me validate that I was capable and actually interested in doing it. Hack the Box kicked my ass. I sucked. I struggled. I spent hours, days, weeks, googling small things that weren&#8217;t even correct just to gain access to the simplest boxes. It was the definition of &#8220;Try Harder&#8221;. But I was getting it. </p>
+
+<p class="has-normal-font-size wp-block-paragraph">My first box was Jerry, and it took me forever. In retrospect, that&#8217;s almost embarrassing, but I completely forgot the box, and after going back to that box once I was certified, I knocked it out within 30 minutes. That was a super fun validation that I had made it!</p>
+
+<p class="has-normal-font-size wp-block-paragraph">After about 3 months of working through hack the box machines, I decided that I had plateaued in the knowledge that I was able to teach myself. I registered for the OSCP starting in January of 2019. I registered for the whole 90 days, knowing that I would need it all.</p>
+</div>
+</div>
+
+<h6 class="has-accent-color has-text-color wp-block-heading"><strong>TL;DR</strong></h6>
+
+<p>I was a sysadmin / network admin with some limited powershell and batch file knowledge, and a knowledge of SMB&#8217;s including email servers, database servers for business software like ERP systems, and firewalls / networking. I did that for about 8-10 years. All of my security knowledge came from HTB and OSCP. </p>
+
+<h2 class="has-accent-color has-text-color wp-block-heading">Registering and Beginning</h2>
+
+<p>There was some time between registering and beginning the course. I took the time for family during the holidays and made it clear to everyone that I was going to be slammed in studying with the start of the new year. </p>
+
+<div style="grid-template-columns:22% auto"><figure><img width="1024" height="772" src="/img/posts/2020-04-kali-linux-revealed-book-mock-3-1024x772.png" alt="" /></figure><div>
+<p class="has-large-font-size wp-block-paragraph">I still wanted to make good use of my time, and I found that the Kali Linux Revealed PDF was free from <a href="https://www.kali.org/download-kali-linux-revealed-book/">https://www.kali.org/download-kali-linux-revealed-book/</a> </p>
+
+<p>This was a great step into more formal knowledge around Kali itself. It gave me a needed refresher on the basics of linux command line. There are sections that aren&#8217;t super applicable to the beginner, like customizing your own Kali Image, but it&#8217;s material that I frequently think about revisiting now that I have the capacity to make use of that knowledge. I honestly don&#8217;t remember much from the PDF, I just remember it was exactly what I needed to feel comfortable with the tool I was about to use non-stop (Kali).</p>
+
+<p>Again, it was cheap (Free) which is important to me. I&#8217;ll always try the free option before implementing the expensive paid-for solution.</p>
+</div></div>
+
+<p>Then the course date started. I received my coursework PDF, the videos, the VM that they provide, and the VPN access. Here&#8217;s the first time I&#8217;m going to mention this. . .</p>
+
+<h2 class="has-text-align-center wp-block-heading">Do the lab report</h2>
+
+<h4 class="has-accent-color has-text-color has-text-align-center wp-block-heading">How do I know where to start?</h4>
+
+<div style="height:52px" aria-hidden="true"></div>
+
+<div>
+<div style="flex-basis:25%">
+<p style="font-size:14px" class="has-text-color has-secondary-color wp-block-paragraph">&#8220;How do I get started?&#8221;</p>
+
+<p style="font-size:14px" class="has-text-color has-secondary-color wp-block-paragraph">&#8220;Where do I begin in the lab&#8221;</p>
+
+<p style="font-size:14px" class="has-text-color has-secondary-color wp-block-paragraph">Don&#8217;t be <em>that</em> person</p>
+</div>
+
+<div style="flex-basis:50%">
+<p class="has-normal-font-size wp-block-paragraph">So many posts&#8230; soo many posts on the OSCP subreddit, so many posts in the forums&#8230;</p>
+
+<p class="has-normal-font-size wp-block-paragraph">Start with the PDF. Read the sections. Watch the corresponding videos. I found that the PDF and the videos synced up almost perfectly. </p>
+
+<p>This feels stupid to say, but in order to learn, you need to be taught. The course material will teach you. Start there.</p>
+</div>
+
+<div style="flex-basis:25%">
+<p style="font-size:14px" class="has-text-color has-secondary-color wp-block-paragraph">&#8220;Do I start at the first IP address?&#8221;</p>
+
+<p style="font-size:14px" class="has-text-color has-secondary-color wp-block-paragraph">&#8220;What else can I ask that will later be embarrassing once I realize I could have just done the coursework that I purchased?&#8221;</p>
+</div>
+</div>
+
+<p>This is a good time to mention that the material does a really good job of teaching you everything you need to know in order to be successful. If something doesn&#8217;t quite make sense, I would go through the videos and then it would click. If I still struggled then it was usually my own fault, misreading or misunderstanding, that would come together by looking it over again. With each section, there are exercises that you can perform and record in a report. Which leads me to this&#8230;.</p>
+
+<h2 class="has-text-align-center wp-block-heading">Do the lab report</h2>
+
+<p>The exercises are supremely helpful in understanding the material. True to the OffSec model though, it&#8217;s not enough to just understand it, lets actually do it! Read the material, watch the videos, then do the exercises so you can prove that you can do it yourself. With each exercise completed, you can record your answers in the lab exercises report. </p>
+
+<div style="grid-template-columns:auto 38%"><figure><img width="1024" height="683" src="/img/posts/2020-04-siora-photography-M40oeDRSgcI-unsplash-1024x683.jpg" alt="" /></figure><div>
+<p class="has-large-font-size wp-block-paragraph">The &#8220;optional&#8221; lab report is worth 5 points towards your exam. The word optional is pronounced &#8220;you&#8217;d be dumb to skip this&#8221;. </p>
+
+<p>To complete your lab report, you simply need to record your lab exercises. Each exercise will clearly define what you need to do. Sometimes it&#8217;s as small as a few commands, or it might be a completely custom script of some kind. Record these answers as the first requirement for the lab exercises report.</p>
+
+<p>The second requirement is to record a lab penetration testing report against at least 10 machines in the lab network. This is the same report that you&#8217;ll turn in for the exam, but would be done against the lab instead of the exam machines. If you&#8217;re paying attention, you&#8217;ll realize that this is your practice on report writing. Do it in the lab, and you&#8217;ll have a solid template and methodology for report writing on the exam.  </p>
+
+<p>Package the lab exercises together with the lab report on 10 machines. Congrats, 5 extra points when you submit this with your exam report. </p>
+</div></div>
+
+<h2 class="has-text-align-center wp-block-heading">Do the lab report</h2>
+
+<p>More than just the 5 extra points, I sincerely believe that people who do the lab report have a far better chance of passing the exam. This was verified by the number of people that would post to forums asking for help after failing the exam. Doing the exercises makes you far more familiar with the materials. In addition to that, once you complete your lab exercises, you&#8217;ll have built your own cheat sheet for countless attack vectors. You&#8217;ll be referencing your own work, your own scripts, your own commands to properly succeed in the lab. </p>
+
+<p>I took all my notes in the CherryTree app. I still have those notes, and have even been able to help other aspiring OSCPs as they work through the material. Even more than that, I built my methodology for note taking while pentesting the machines in the lab. I still use CherryTree for pentest engagements today, and I still take notes the same way I did while working through the OSCP. I learned that by going through the motions within the labs and while writing my lab report. </p>
+
+<h2 class="has-text-align-center wp-block-heading">For the love of God</h2>
+
+<h2 class="has-text-align-center wp-block-heading">Do the lab report</h2>
+
+<p>If you take nothing else way from this review&#8230;. just do the lab report, right?</p>
+
+<h2 class="has-accent-color has-text-color wp-block-heading">My Lab Time</h2>
+
+<p>I read a lot of reviews first, and I knew what to expect. I knew roughly where I stood too, and I estimated that it would take me about 3 weeks to get through the lab materials and exercises. I was spot on, so I was glad that I reserved 90 days. </p>
+
+<div style="grid-template-columns:auto 52%"><figure><img width="1024" height="554" src="/img/posts/2020-05-Screenshot-2020-05-04-at-10.02.58-PM-1024x554.png" alt="" /></figure><div>
+<p class="has-large-font-size wp-block-paragraph">Plan your time and dedicate to it. I made all of my family and friends very aware of the dedication I intended on having. I spent 20 &#8211; 30 hours a week on the OSCP course, in addition to my 40 hours a week at work. </p>
+
+<p>I knew it was going to be an uphill battle for me. I planned for it as much as possible. On the right is a random week during my studies, I recorded my time and kept notes in some events to keep track of where I needed to start the next day. </p>
+
+<p>Saturdays and Sundays were often all-day-events. I usually went slow on Wednesdays, taking a little time for myself. </p>
+</div></div>
+
+<blockquote><p>&#8220;Read the material, watch the videos, then do the exercises so you can prove that you can do it yourself.&#8221;</p><cite>&#8211; Me just a few paragraphs ago</cite></blockquote>
+
+<h6 class="has-secondary-color has-text-color wp-block-heading">Do that for 3 weeks, or however long it takes you. Then jump into the labs. </h6>
+
+<div>
+<div>
+<p>Side Bar: I read a lot of reviews where people can do the course materials way faster. I guess I must be a slow reader or maybe I took longer to do the exercises? This was as fast as I could push through it. </p>
+
+<p>Some people do this in between schooling, or in between jobs, so they can afford full 8 hours days (or more) to study. I didn&#8217;t have that opportunity, so I think 3 weeks is a fair estimate of time. I also think this is why people don&#8217;t do the lab report. They want to get straight into the labs since they think that will be a better use of their time. A mistake, IMHO. </p>
+</div>
+
+<div>
+<p>You&#8217;ll find that some of the lab exercises require exploitation of a lab machine. This is a little out of place, since you won&#8217;t really know which lab machine is vulnerable to what flaw&#8230; so it can be hard to complete those exercises right away. </p>
+
+<p>I made a short list (no more than 5) to come back to. I kept the list around so I could work through the lab until I found a suitable host to document the lab exercise. I recall sqlmap being a good example of this. You have to identify a good SQL injection point before you can really do that exercise, so once I found one, I went back to the exercise to document it in my lab exercises report. </p>
+</div>
+</div>
+
+<h4 class="has-accent-color has-text-color wp-block-heading">The Lab Machines</h4>
+
+<p>One thing that I completely missed until I was a few machines in was the Alpha lab machine. If you&#8217;re truly lost about how to get started in the labs, the Alpha machine has a write-up in the student forums, which is basically a walkthrough on how to enumerate and exploit the system. If you haven&#8217;t done any HackTheBox, VulnHub, or similar CTFs&#8230; then you should start with Alpha to understand what you&#8217;re doing. </p>
+
+<p>Of course, you prepared well before registering, so you won&#8217;t need help with that, right? In that case, just be aware that you can&#8217;t use Alpha in your lab report, since the answers are basically out in the open on the student forums. </p>
+
+<div><figure><img width="948" height="640" src="/img/posts/2020-05-oscp-lab-networks.png" alt="" /></figure><div>
+<p class="has-large-font-size wp-block-paragraph">So outside of that, how DO you get started in the labs? For many people, this might be the first time that they can actively attack a group of computers this large.</p>
+
+<p>After all that time in the course materials, and the time I had spent learning on HTB&#8230; I had to step back after scanning the lab and think through&#8230; how am I actually going to start getting into this network?</p>
+
+<p>The answer will change, depending on the person. Are you good with linux web servers? You might want to start there, see if you can find a few that you&#8217;re familiar with. If you&#8217;re comfortable with them, it will be easier to tell when something isn&#8217;t quite right with them.</p>
+
+<p>For me, I&#8217;m a Windows SysAdmin, so I targeted old Windows machines. I figured if they&#8217;re old, there are probably known exploits, and I&#8217;m comfortable with Windows so it shouldn&#8217;t be too bad. </p>
+
+<p>This worked well for me. I went from feeling a little lost, to picking off a few easy machines in a very short time. It helped me develop a &#8220;groove&#8221; that I could keep using throughout the lab. When it came time to progress onto machines that I was less comfortable with, I could still work through it. I had successfully adopted a methodology. </p>
+</div></div>
+
+<p style="color:#aaa7a7" class="has-text-color has-text-align-center has-large-font-size wp-block-paragraph"><strong>That&#8217;s the real magic of the OSCP labs. Out of everywhere that I&#8217;ve studied, that was the one place that I could naturally develop a methodology that would live long past the exam completion and into my career. </strong></p>
+
+<p>From there, the methodology really became &#8220;rinse and repeat&#8221;. Each new machine could be a different OS, with different services, but the structure of the attack fell into a pattern. With that happening naturally, I started finding a groove for my note taking. And slowly, over the course of a few machines, my note-taking evolved and turned into a repeatable pattern. Of course, there isn&#8217;t a single perfect template as each attack could be different, but I found what works for me. </p>
+
+<blockquote><p>Don&#8217;t be afraid of using the forums</p><cite>I know this is a little taboo, as most people would tell you to &#8220;try harder&#8221;</cite></blockquote>
+
+<p>Use the forums, but use them in moderation. The best advice I can give around this is to be honest with yourself. I knew the difference between struggling because I didn&#8217;t try hard enough vs. when I knew I had a knowledge gap. I don&#8217;t gain anything by struggling for 3 hours on a topic I know nothing about. I succeeded by spending a little time learning from the forums, and then experimenting with it in the lab. I specifically recall learning how to use other peoples SSH keys while in the labs. I knew it was an option, but I never knew how. I spent some time in forums to validate that it was the right move, and then I learned about it. Don&#8217;t struggle because somebody tells you it&#8217;s the right move. Learn when you are are struggling, so you won&#8217;t have to struggle next time. </p>
+
+<p>I documented the machines I compromised throughout the labs as I was going. This is the second half of your lab report, remember, the one you&#8217;re definitely doing? In the first half, you documented all of the homework exercises from the coursework PDF. Now, you&#8217;re compromising at least 10 machines in the lab and documenting the compromise as a part of that report. There are at least two good reasons to do this lab penetration test formatted report. </p>
+
+<div>
+<div>
+<h4>First</h4>
+
+<p>The biggest reason in my mind that you should do this is: Methodology. Again, you&#8217;re building this methodology while in the lab. You get a feel for how to take notes on the machines you&#8217;re attacking and you get a feel for what you want to document. </p>
+</div>
+
+<div>
+<h4>Second</h4>
+
+<p>The other big reason you&#8217;ll be glad you did this: You&#8217;re also documenting in the &#8216;final&#8217; format, so you&#8217;ll have a template of a final report that YOU created. You can use your template once you&#8217;re in your exam, or for your career afterwards.</p>
+</div>
+</div>
+
+<p>Both of these things are going to make you more efficient in your exam and in your career. With a template and a routine structure, you can spend your time focusing on the attacks. The documentation process will be second nature to some extent. </p>
+
+<p>I selected and documented more than 10 machines, like a bakers dozen. Then at the end I had roughly 15 to pick from. I selected the 10 that were the best sounding, least similar to each other, and threw out the &#8220;burnt cookies&#8221;. You only need to submit 10 lab machines in your lab report. I actually submitted 11 in mine, just in case OffSec felt that two were similar in nature. The rules more or less say that you can&#8217;t use the same exploit against multiple machines, or can&#8217;t use two different exploit paths against the same single machine.  </p>
+
+<h3 class="has-accent-color has-text-color wp-block-heading">&#8230; but what did you learn??</h3>
+
+<p>I&#8217;ve mostly given you my opinions and conceptual ideas around how to work with the OSCP course and the labs, but haven&#8217;t really mentioned anything about the toolkits or attacks that you learn. This is kinda intentional&#8230; I learned the syllabus&#8230; what else can I say? I can&#8217;t really go into each utility that they discuss.</p>
+
+<p>SQLi, XSS, LFI RFI, RCE, Hydra, John, Hashcat, directory fuzzing, dirbuster, gobuster, sqlmap, smb enumeration, buffer overflows, scripting and languages (python, ruby, c, bash scripting, powershell), metasploit, tcpdump, nc, reverse shells, interception proxies (burpsuite, owasp zap), sooo many more. </p>
+
+<p>I learned a lot. For every protocol I thought I knew and understood, there is at least one offensive tool focused around enumerating and exploiting it, and often there are dozens (smbclient, smbmap, enum4linux, nmap smb scripts, etc). It was like I was relearning every protocol I had ever known. </p>
+
+<p>Personally, I learned a lot about bash scripting things. I also learned a lot about python scripting, which leads nicely into a staple of the OSCP&#8230; </p>
+
+<h2 class="has-accent-color has-text-color wp-block-heading">The Buffer Overflow</h2>
+
+<p>Calm down people, this was way easier than everybody made it seem. </p>
+
+<div><figure><img width="507" height="575" src="/img/posts/2020-05-Screenshot-2020-05-13-at-8.56.56-PM.png" alt="" /></figure><div>
+<p class="has-large-font-size wp-block-paragraph">Really though, the materials teach you everything you need to know. I can say this confidently, because despite trying to learn this before the course, I was completely lost.</p>
+
+<p>Then I started the buffer overflow section of the course materials. I felt everything was covered in a great, logical way. It ended up being one of the areas I was most comfortable with. I went through their exercises early on, and then again right before my lab time expired. </p>
+
+<p>A week before the exam, I ran through the more public examples of buffer overflows, like dobufferoverflowgood, and that was enough to validate that I could do it. </p>
+
+<p>That&#8217;s all I&#8217;ll say on it. Shellcoding, assembly language, python scripting, fuzzing, all makes it seem like it&#8217;s going to be harder than it really is. </p>
+</div></div>
+
+<h2 class="has-accent-color has-text-color wp-block-heading">The Exam</h2>
+
+<p>The famous exam. 24 hours to compromise the exam machines. Another 24 hours to write a report. Fail to compromise the machines and you fail the exam. Even better, if you compromise the machines but fail to provide a quality report, you fail the exam. I love that it stresses the importance. There isn&#8217;t a company in the world that cares if you can compromise their network if you can&#8217;t also provide them with quality information. </p>
+
+<p>At this point, you should be prepared. You have a cheat sheet of your attack examples from your lab exercises. You have a template for note-taking, and for the final report based on your lab report. </p>
+
+<p>I took three weeks between the lab access and the exam. I took most of the time to relax after a LOT of late nights and long weekends. I spent a little time back in HackTheBox, seeing how much the course helped me. </p>
+
+<p>Most people will agree, get good sleep, eat well, take breaks. I did some of those things&#8230; My wife made my meals for me and delivered them to me. I drank a lot of caffeine, there was no sleeping. Of the 24 hours, I spent about 21 at the keyboard. I did stop at some point and sleep for those other 3 hours. In the last 15 minutes, I was working on privilege escalation on the last machine, which I never did get to finish&#8230; oh well. I maybe should have slept after I knew I had enough points to pass, but the thing is, I was having fun, I didn&#8217;t want to stop. </p>
+
+<p>At the end of my 24 hours, I was happy. I started copying my notes over to the final report, but my lack of sleep quickly caught up with me. Microsoft Word is pretty hard to stare at &#8230; and I couldn&#8217;t stay up any more. I slept, with no alarm set, until I was refreshed. After that it was just casual copy and paste into my final report until things looked good. It probably only took me about 4 hours to do the report, because I had already taken such good notes along the way. That&#8217;s a hard mentality to stay in when you&#8217;re experimenting with exploits, but it really pays of for report writing later. I packaged up the lab exercises PDF, the lab report PDF, and the exam report PDF. I only had to wait 3 &#8211; 4 days for my exam results. </p>
+
+<h4>I&#8217;ve never checked my email so often. </h4>
+
+<p>Even more ridiculous, somehow I missed the email when I got it, and didn&#8217;t know I passed for a few hours after I got the email. But I did it. I can honestly say I&#8217;ve never worked harder for a certification. It&#8217;s by far the most challenging certification I know of. </p>
+
+<p>Now it&#8217;s on to the next. I plan on doing the rest of the Offensive Security certifications. Their approach to the exam, requiring that you actually be able to do it (entirely practical exams with no Questions and Multiple Choice answers) is super appealing to me. I&#8217;m still debating between the OSCE and OSWE for the next cert, in early 2021. For now, I&#8217;m focused on SANS certifications for work, and might consider reviewing those as well. (GWAPT &#8211; Sec542 certification has already been achieved, and the new Beta Sec588 Cloud PenTesting is this July). </p>
+
+<p></p>

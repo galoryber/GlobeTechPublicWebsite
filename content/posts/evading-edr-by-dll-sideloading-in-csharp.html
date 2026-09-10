@@ -1,0 +1,241 @@
+<p class="has-text-align-center wp-block-paragraph"><sub>The blog post accompanies my public conference talks on this topic. Slides are available at the bottom.</sub></p>
+
+<p></p>
+
+<p>One thing I learned from doing this talk is that a surprisingly high number of InfoSec professionals believe that bypassing EDR is not possible or is an exception. It should be more common knowledge that security tools can be bypassed. Regardless of what EDR you run, there are ways to get around it. This is one technique to evade those defenses by running malware within a more trustworthy process. </p>
+
+<p>Instead of believing that your security tools will prevent all malware, you should know that eventually it can be bypassed, so it&#8217;s better to understand some of those techniques, and how the malware operates.</p>
+
+<p></p>
+
+<h4>What do I mean Bypass EDR? </h4>
+
+<p>Well if I use some sort of basic shellcode runner, like this as a starting point. <a href="https://github.com/nettitude/PoshC2/blob/master/resources/payload-templates/csc.cs" target="_blank" rel="noopener" title="">https://github.com/nettitude/PoshC2/blob/master/resources/payload-templates/csc.cs </a></p>
+
+<p> </p>
+
+<div>
+<div style="flex-basis:33.33%">
+<figure><img width="529" height="546" src="/img/posts/2023-05-SourceCode-1.png" alt="" /></figure>
+</div>
+
+<div style="flex-basis:66.66%">
+<p>&#8230;and I compile that to an EXE, there are EDR tools that instantly look at those binaries ( and any similar custom shellcode runners) and determine they are suspicious. With embedded shellcode, it&#8217;s high entropy, it&#8217;s a globally unique EXE file, it immediately makes network connections outbound. EDR looks at this combination and just shuts down the process.<br><br>But if I take the same style of code and compile it as a DLL, EDR gives it much less scrutiny. Static analysis scans against the DLL are much more likely to consider the file safe and pass the scan. </p>
+
+<p>This means, we don&#8217;t have to rewrite our shellcode runners, we just need to compile them as a DLL. Then we just need a way to load our malicious DLLs.</p>
+</div>
+</div>
+
+<h4>What is DLL Sideloading?</h4>
+
+<div>
+<div style="flex-basis:66.66%">
+<p>I feel like this used to mean something more specific. These days it seems that it is a catch all that <strong>refers to an EXE that will load a DLL sitting alongside it</strong>.</p>
+
+<p>There are multiple ways that this can happen, like a manifest file specifying the dll location (historically, this is what I understood DLL sideloading to mean). You may also have source code with a LoadLibrary call that doesn&#8217;t use an absolute path, and therefore searches for DLLs based on search order. At the end of the day, we don&#8217;t care anymore (apparently).</p>
+</div>
+
+<div style="flex-basis:33.33%">
+<figure><img src="/img/posts/2023-05-Ctempoleview.png" alt="" width="202" height="162" /></figure>
+</div>
+</div>
+
+<p><strong>What are we going to do?</strong></p>
+
+<p>We&#8217;re going to find a Microsoft signed EXE that will ‘sideload’ DLLs. Then we&#8217;ll place our DLL in the same directory to get execution through the DigSig binary.</p>
+
+<p></p>
+
+<p>Check out these references about DLL Sideloading. <strong>Hijack Libs</strong> is basically what inspired me to start writing my malware this way, and let to this talk / post. </p>
+
+<p><a href="https://www.mandiant.com/resources/blog/abusing-dll-misconfigurations">Mandiant</a>, <a href="https://hijacklibs.net/">hijacklibs.net</a>, <a href="https://www.cybereason.com/blog/threat-analysis-report-dll-side-loading-widely-abused">CyberReason</a></p>
+
+<p></p>
+
+<h4>Finding a vulnerable EXE</h4>
+
+<p>To start, I get some signed binaries. I like the <a href="https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/">Microsoft SDK </a>for signed EXEs. Particularly because they don&#8217;t typically exist on disk by default (which is huge for certain EDR detection capabilities), but they commonly NEED DLLs alongside them to function. The only way for that to happen is for both to be brought down to disk in a random directory and executed together. Since they&#8217;re signed by MS, they tend to be inherently more trusted. </p>
+
+<p>Now that we have some EXEs, I run the EXE while watching with the SysInternals tool Procmon. Process Monitor will let you see what actions a process is taking. Using this, we can check for the process looking for a .DLL&nbsp;file where the result is NOT FOUND. Or sometimes I&#8217;ll run the exe and just monitor the directory that I&#8217;m running it from so I can see all the actions that it takes. In either case, I create a new empty directory, and place the EXE there with nothing else in that directory. For example, monitor C:\Temp\exes\ location only, and now any exe you run from that directory, you&#8217;ll get to see the actions it takes. </p>
+
+<div>
+<div>
+<figure><img src="/img/posts/2023-05-SDKExample-2.png" alt="" width="406" height="372"/></figure>
+</div>
+
+<div>
+<figure><img src="/img/posts/2023-05-ProcMonExample.png" alt="" width="465" height="257" /></figure>
+</div>
+</div>
+
+<h4><strong>Testing with OleView</strong></h4>
+
+<p>We&#8217;re going to copy oleview into C:\temp\exes. Oleview is a good example tool for a couple of reasons. One, it isn&#8217;t normally on disk somewhere, and that is actually a pretty good detection point. Some EDRs are smart enough to witness when an EXE already lives in System32. Since a normal user has a PATH entry that would find EXEs in System32, some EDRs will outright block those exes from running outside of that directory since it&#8217;s likely they&#8217;re just being abused for DLL sideloading. </p>
+
+<p>If we run oleview from our newly created directory and monitor with proc mon we can see a series of DLLs that it checks for, but the &#8220;Result&#8221; is NOT FOUND. This is our big tip off. These are the DLLs we should review. </p>
+
+<figure><img width="727" height="501" src="/img/posts/2023-05-ProcMonOle.png" alt="" /></figure>
+
+<div>
+<div>
+<p><br>Oleview gives us an error message though, a very verbose message that calls out the fact that it couldn&#8217;t find iviewers.dll. Even if you didn&#8217;t run Procmon, you&#8217;d already be able to guess that oleview probably sideloads iviewers.dll. Most EXEs aren&#8217;t going to be so obvious, so procmon is the way to go, and we can see iviewers.dll in the results from procmon as well.</p>
+</div>
+
+<div>
+<figure><img src="/img/posts/2023-05-OleVerboseIviewers.png" alt="" width="453" height="238" /></figure>
+</div>
+</div>
+
+<h4><strong>Inspecting the original DLL</strong></h4>
+
+<p>Back in the SDK folder we can find the original iviewers.dll and we can use this to look at the functions that are normally available through this DLL. </p>
+
+<p>DLLs export certain functionality to a program. Our exe expects this functionality to be present when it loads the dll. If oleview loads a dll and the exported functionality seems to be missing, it will immediately error out and never actually load or execute the DLL. We can explore the &#8220;Export Address Table&#8221; to identify what these functions are, so we can understand what functionality a DLL normally offers for programs to utilize. </p>
+
+<p>Using tools like CFF Explorer, PE-Bear, or objdump on the *nix command line, we can have the DLL parsed so we can explore it. The PE structure is parsed and displayed but that can be intimidating to look at if you&#8217;ve never seen it before. All we really care about this time is the &#8220;Exports&#8221; which will show us what functions exist inside of that DLL. These are the functions that an application can utilize when it loads the DLL.</p>
+
+<div>
+<div>
+<figure><img src="/img/posts/2023-05-OpenOrig.png" alt="" width="538" height="174" /></figure>
+</div>
+
+<div>
+<figure><img src="/img/posts/2023-05-CFFOrig.png" alt="" width="580" height="425"/></figure>
+</div>
+</div>
+
+<h4><strong>Writing our own DLL</strong></h4>
+
+<p>Often PoCs are written in C /C++. I prefer C#, but this preference causes some problems for us. To understand this, we need to understand the difference between managed and unmanaged code.</p>
+
+<p>When we write C or C++, we have to compile it for the machine to understand our code. Compiling these languages will result in machine code, or native code. This is code that the CPU understands and can execute. Machine code, native code, unmanaged code</p>
+
+<p> Difference between machine code and byte code. copmiling down to native code, vs compiling down to byte code, and then needing a CLR for the rest. </p>
+
+<p>Methods written in C# won&#8217;t exist in an export address table. c# .NET assemblies don&#8217;t need that same adverstisement to function. the result is oleview won&#8217;t be able to use our DLL. It will load it, look for the EAT, and not find any functions. It will assume the DLL doesn&#8217;t have those functions, and fail to call the DLL at all. </p>
+
+<figure><img width="514" height="241" src="/img/posts/2023-05-Compiling.png" alt="" /></figure>
+
+<h4>C# DLL- No Exports and Manually Exporting Methods</h4>
+
+<p>To review this, and prove ourselves correct, we can create a C# based DLL and create methods inside it. Even though our method names might be the same as, once we compile it and open the DLL with something like CFF explorer, we&#8217;ll see that there is no &#8220;Export Directory&#8221;. So a standard C# .NET Assembly doesn&#8217;t export functions the same way unmanaged code does. You&#8217;ll notice that there is a .NET Directory, so it recognizes that we&#8217;re looking at a different structure here. </p>
+
+<div>
+<div>
+<figure><img width="687" height="624" src="/img/posts/2023-05-CSharpNoExports.png" alt="" /></figure>
+</div>
+
+<div>
+<figure><img width="665" height="676" src="/img/posts/2023-05-NoExpCFF.png" alt="" /></figure>
+</div>
+</div>
+
+<p>But the C# DLL is compiled down to byte-code, so we can use an Intermediate Language disassembler to &#8216;reverse&#8217; the compiled code back to IL. This will show us a close resemblance of the source code. If we review the IL, we can find our methods. Inside the method, we have the ability to add a &#8216;.export&#8217; descriptor. This one change to our IL will publish the method as a exported function. With this change, we need to re-assemble the IL as a DLL again, and we can once again review the DLL in something like CFF explorer. </p>
+
+<div>
+<div>
+<figure><img width="708" height="575" src="/img/posts/2023-05-UnasmbldIL.png" alt="" /></figure>
+</div>
+
+<div>
+<figure><img width="624" height="300" src="/img/posts/2023-05-ManualEditIL.png" alt="" /></figure>
+
+<figure><img width="570" height="35" src="/img/posts/2023-05-ReAsmbIL.png" alt="" /></figure>
+</div>
+</div>
+
+<p>This time, we&#8217;ll see that it&#8217;s still a .NET assembly of course, but now we have an Export Directory, with the function name properly exported. This is enough for an application to believe that the functionality is present, it won&#8217;t do any checks to see that the code does what it expects.</p>
+
+<figure><img width="832" height="520" src="/img/posts/2023-05-ManuallyExported.png" alt="" /></figure>
+
+<h4>C# DLL- DLLExport Nuget Package</h4>
+
+<p>While we certainly could do this manually, we don&#8217;t have to. There is more than one way to make this easier for you, but I like the Nuget package DLLExport. If you install that package to your project, you can add the &#8216;[DLLExport]&#8217; decorator to your C# method and the methods will be properly exported to the EAT.</p>
+
+<div>
+<div>
+<figure><img width="660" height="368" src="/img/posts/2023-05-DLLExportPackage.png" alt="" /></figure>
+</div>
+
+<div>
+<figure><img width="574" height="608" src="/img/posts/2023-05-DLLExportSource.png" alt="" /></figure>
+</div>
+</div>
+
+<p>With the DLLExport Nuget package installed, we can compile the new DLL with the methods exported. The newly compiled DLL can be renamed to iviewers.dll and now we&#8217;ll be able to load it into oleview if we keep them in the same directory. The execution shows our msfvenom Message Box shellcode being loaded inside of oleview. </p>
+
+<h4><strong>Oleview PoC</strong></h4>
+
+<p>The moment of truth, if we take our newly compiled DLL and rename it to iviewers.dll, then we can copy it into the same directory as oleview. This should be enough to get our execution. Oleview will launch, look for iviewers.dll, find our dll, check that the exports it expects are actually present, and finally execute. </p>
+
+<figure><img width="414" height="50" src="/img/posts/2023-05-CPExpIviewers.png" alt="" /></figure>
+
+<figure><img width="379" height="385" src="/img/posts/2023-05-OlePoC.png" alt="" /></figure>
+
+<h4><strong>Why would this work</strong></h4>
+
+<p>So we created an export&#8230; why does this work? We&#8217;re still loading oleview, which has no idea that bytecode is a thing. In fact, if we look at oleview running, we can see the clr.dll isn&#8217;t even loaded, so it doesn&#8217;t have any way to process managed code like our C# DLL. </p>
+
+<p>The thing is, when the OS loads the DLL, it recognizes that structure as byte-code, and already knows that in order to process it, we&#8217;ll need the CLR. As a result clr.dll will automatically be loaded into the process and our C# dll will execute as expected. </p>
+
+<div>
+<div>
+<figure><img width="490" height="329" src="/img/posts/2023-05-oleNoCLR.png" alt="" /></figure>
+</div>
+
+<div>
+<figure><img width="497" height="329" src="/img/posts/2023-05-OleCLR.png" alt="" /></figure>
+</div>
+</div>
+
+<h4><strong>Cool, but I don&#8217;t write code</strong></h4>
+
+<div>
+<div style="flex-basis:66.66%">
+<p>Yeah, you don&#8217;t really have to. There are great tools out there, and when it comes to DLL sideloading, I&#8217;ve really liked the Freeze project by Optiv. The project lets you specify an export, and some shellcode, and it will create a DLL with that export, which encrypting your shellcode inside the DLL. <br>I also really like the pull request on the project right now, which allows you to specify multiple exports, or specify a source DLL. In that case, you can specify the original DLL, and your shellcode from your favorite C2 server. The result is a DLL that you can use for DLL sideloading.</p>
+</div>
+
+<div style="flex-basis:33.33%">
+<figure><img src="/img/posts/2023-05-Optiv.jpg" alt="" width="153" height="211" /></figure>
+</div>
+</div>
+
+<p> </p>
+
+<h4><strong>Didn&#8217;t this just break Oleview?</strong></h4>
+
+<p>Absolutely, but in our case, we may just want a C2 beacon executed. We&#8217;re only doing it with oleview to gain extra trust from our security tools by executing within a legitimate tool. </p>
+
+<p>We could, however, keep application functionality. In that case, we&#8217;re looking for a DLL proxy. While this is a different technique, it shares a lot of the same concepts. An application can call our DLL expecting certain functionality, and the proxy DLL will be able to run our shellcode, but then pass along the requests to the ACTUAL original DLL, which maintains the original applications requests and functionality.</p>
+
+<p><br>I like using the project SharpDLLProxy for this, this tool take shellcode and source DLL, but the output is actually just source code for a proxy DLL. </p>
+
+<figure><img width="1024" height="302" src="/img/posts/2023-05-SharpDLLProxy-1024x302.png" alt="" /></figure>
+
+<h4><strong>Blue Team</strong></h4>
+
+<p>I won&#8217;t pretend to be a wise blue teamer, but there are some possible detection options and threads to pull on. </p>
+
+<p>One of the first detection points I noticed is that some EDRs will detect and outright block on DLL sideloading of binaries would normally have been found in System32. This makes sense to me, since every user has the PATH environment variable  defined. If we copy a utility from System32 out to our own directory, and DLL sideload with it, those EDRs can basically assume that normal operation would have let the user resolve these binaries to the already-on-disk files inside of System32, so if we&#8217;re calling something else, it&#8217;s likely a DLL sideloading attempt. </p>
+
+<p>That&#8217;s why I like to bring in MS Signed files that aren&#8217;t already on disk. The expectation for those files is that they will be written to any random directory. Not quite as obvious, but even the DLL will make a difference. For example, if we use oleview, but we opt to choose aclui.dll for the sideload&#8230; that might be a little suspicious to some EDRs, since aclui.dll already lives in System32. </p>
+
+<p>To test your EDR, you could copy something like relpost.exe from System32, and build your own reagent.dll (examples from hijacklib) and see your EDRs reaction to understand what it is capable of.</p>
+
+<p></p>
+
+<p>You might also consider looking at signed binaries that are loading DLLs that aren&#8217;t signed. For example, the original iviewers.dll is also a Microsoft signed file. Our version of iviewers is obviously not signed by Microsoft.</p>
+
+<p></p>
+
+<p>When it comes to C# tradecraft, you might want to watch for clr.dll being loaded into a process, especially if you can understand where that is normal and when it isn&#8217;t. This is useful beyond just our PoC, but for any beacon that loads C# based malware. For example, a beacon process that loads something like seatbelt or rubues, would have the side effect of image loading clr.dll .</p>
+
+<p></p>
+
+<p>If you can, baseline what normal looks like for your exes running in &#8216;non-standard&#8217; directories. Potentially more difficult, but attempt to do the same for your DLLs based on image load events. I&#8217;ve also heard there may be opportunity in identifying newly written DLLs that are immediately loaded into another process. Pairing down all of this information has resulted in decent success in teams I&#8217;ve seen.</p>
+
+<p></p>
+
+<h4>Presentation Slides</h4>
+
+<div><a id="wp-block-file--media-b4f2bbb6-64aa-496f-87e4-499abd814b53" href="/media/2023-05-DLL-Sideloading.pptx">DLL-Sideloading</a><a href="/media/2023-05-DLL-Sideloading.pptx" download aria-describedby="wp-block-file--media-b4f2bbb6-64aa-496f-87e4-499abd814b53">Download</a></div>

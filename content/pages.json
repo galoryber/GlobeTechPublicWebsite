@@ -1,0 +1,92 @@
+[
+  {
+    "slug": "globetech-dotbiz",
+    "title": "Vulnerability Assessments and Penetration Testing",
+    "legacy_path": "/index.php/globetech-dotbiz/",
+    "route": "/",
+    "nav_label": "Home",
+    "in_nav": false,
+    "is_service": false
+  },
+  {
+    "slug": "about-globetech",
+    "title": "About GlobeTech",
+    "legacy_path": "/index.php/about-globetech/",
+    "route": "/about/",
+    "nav_label": "About",
+    "in_nav": true,
+    "is_service": false
+  },
+  {
+    "slug": "professional-services",
+    "title": "Professional Services",
+    "legacy_path": "/index.php/professional-services/",
+    "route": "/services/",
+    "nav_label": "Services",
+    "in_nav": true,
+    "is_service": false
+  },
+  {
+    "slug": "penetration-testing-services",
+    "title": "Network Penetration Testing Services",
+    "legacy_path": "/index.php/penetration-testing-services/",
+    "route": "/services/network-penetration-testing/",
+    "nav_label": "Network Penetration Testing",
+    "in_nav": false,
+    "is_service": true
+  },
+  {
+    "slug": "external-vulnerability-scanning",
+    "title": "External Vulnerability Scanning",
+    "legacy_path": "/index.php/external-vulnerability-scanning/",
+    "route": "/services/external-vulnerability-scanning/",
+    "nav_label": "External Vulnerability Scanning",
+    "in_nav": false,
+    "is_service": true
+  },
+  {
+    "slug": "internal-vulnerability-scanning",
+    "title": "Internal Vulnerability Scanning",
+    "legacy_path": "/index.php/internal-vulnerability-scanning/",
+    "route": "/services/internal-vulnerability-scanning/",
+    "nav_label": "Internal Vulnerability Scanning",
+    "in_nav": false,
+    "is_service": true
+  },
+  {
+    "slug": "web-application-penetration-testing",
+    "title": "Web Application Penetration Testing",
+    "legacy_path": "/index.php/web-application-penetration-testing/",
+    "route": "/services/web-application-penetration-testing/",
+    "nav_label": "Web Application Penetration Testing",
+    "in_nav": false,
+    "is_service": true
+  },
+  {
+    "slug": "wifi-testing-services",
+    "title": "WiFi Testing Services",
+    "legacy_path": "/index.php/wifi-testing-services/",
+    "route": "/services/wifi-testing/",
+    "nav_label": "WiFi Testing",
+    "in_nav": false,
+    "is_service": true
+  },
+  {
+    "slug": "pricing",
+    "title": "Pricing",
+    "legacy_path": "/index.php/pricing/",
+    "route": "/pricing/",
+    "nav_label": "Pricing",
+    "in_nav": true,
+    "is_service": false
+  },
+  {
+    "slug": "contact",
+    "title": "Contact",
+    "legacy_path": "/index.php/contact/",
+    "route": "/contact/",
+    "nav_label": "Contact",
+    "in_nav": true,
+    "is_service": false
+  }
+]
